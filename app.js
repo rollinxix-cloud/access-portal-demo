@@ -2,8 +2,8 @@
 
 // 1. SYSTEM BASE CONFIGURATION & MOCK STORAGE DATA
 const ADMIN_CREDENTIALS = {
-  username: "admin@system.local",
-  password: "AdminPass123!"
+  username: "adminjon",
+  password: "JonAdmin123"
 };
 
 // Application Global State Context Manager
