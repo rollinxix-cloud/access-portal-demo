@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Access Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- 1. UNIFIED LOGIN VIEW -->
+    <section id="login-view" class="view-panel">
+      <div class="card auth-card">
+        <h2>System Login</h2>
+        <p class="subtitle">Enter your system credentials to proceed</p>
+        
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-username">Username or Email</label>
+            <input type="text" id="login-username" required autocomplete="username" placeholder="e.g., admin@system.local">
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" required autocomplete="current-password" placeholder="••••••••">
+          </div>
+          <div id="login-error" class="error-msg hidden"></div>
+          <button type="submit" class="btn btn-primary">Authenticate</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 2. ADMIN DASHBOARD VIEW -->
+    <section id="admin-view" class="view-panel hidden">
+      <header class="dashboard-header">
+        <div>
+          <h1>Admin Control Center</h1>
+          <p id="admin-welcome-msg">Welcome back, Administrator</p>
+        </div>
+        <button class="btn btn-secondary logout-btn">Secure Logout</button>
+      </header>
+
+      <div class="dashboard-grid">
+        <!-- Staff Management Provisioning Panel -->
+        <div class="card">
+          <h3>Provision Staff Account</h3>
+          <form id="provision-form">
+            <div class="form-group">
+              <label for="staff-username">Staff Username</label>
+              <input type="text" id="staff-username" required placeholder="e.g., sam_staff">
+            </div>
+            <div class="form-group">
+              <label for="staff-password">Initial Password</label>
+              <input type="password" id="staff-password" required placeholder="••••••••">
+            </div>
+            <div id="provision-error" class="error-msg hidden"></div>
+            <div id="provision-success" class="success-msg hidden">Account successfully provisioned.</div>
+            <button type="submit" class="btn btn-primary">Create Account</button>
+          </form>
+        </div>
+
+        <!-- Directory & Access Control Management -->
+        <div class="card grid-span-2">
+          <h3>Staff Directory & Status Control</h3>
+          <div class="table-responsive">
+            <table id="staff-table">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="staff-table-body">
+                <!-- Appended dynamically by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. STAFF INTERFACE VIEW -->
+    <section id="staff-view" class="view-panel hidden">
+      <header class="dashboard-header">
+        <div>
+          <h1>Staff Operational Portal</h1>
+          <p id="staff-welcome-msg">Welcome back, Staff Member</p>
+        </div>
+        <button class="btn btn-secondary logout-btn">Secure Logout</button>
+      </header>
+
+      <div class="card active-workspace">
+        <h3>Operational Dashboard</h3>
+        <p>Your access token is valid and active. You have full clearance to execute standard internal operations.</p>
+        <div class="status-indicator-box">
+          <span class="status-dot online"></span>
+          <span>System Environment Status: <strong>Secure & Operational</strong></span>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
