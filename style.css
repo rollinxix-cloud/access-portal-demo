@@ -1,32 +1,14 @@
-/* 1. THEME VARIABLES ENGINE (DARK MODE DEFAULT) */
-html[data-theme="dark"] {
+:root {
   --bg-primary: #0f172a;
   --bg-secondary: #1e293b;
   --bg-card: #111827;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
-  --border-color: #334155;
-  --gimmick-gradient-start: #1e293b;
-  --gimmick-gradient-end: #0f172a;
-}
-
-html[data-theme="light"] {
-  --bg-primary: #f1f5f9;
-  --bg-secondary: #ffffff;
-  --bg-card: #ffffff;
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --border-color: #e2e8f0;
-  --gimmick-gradient-start: #f8fafc;
-  --gimmick-gradient-end: #e2e8f0;
-}
-
-:root {
   --accent: #3b82f6;
   --accent-hover: #2563eb;
   --success: #10b981;
   --danger: #ef4444;
-  --gold: #f59e0b;
+  --border-color: #334155;
 }
 
 * {
@@ -36,12 +18,11 @@ html[data-theme="light"] {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-main);
   line-height: 1.5;
   padding: 2rem 1rem;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #app {
@@ -63,8 +44,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 2rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .auth-card {
@@ -72,43 +52,7 @@ body {
   margin: 4rem auto 0 auto;
 }
 
-/* Brand Identity Branding Elements */
-.brand-header-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.brand-logo-img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 3px solid var(--accent);
-  object-fit: cover;
-  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
-}
-
-.header-brand-container {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.dashboard-logo-img {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  border: 2px solid var(--accent);
-  object-fit: cover;
-  transition: transform 0.2s ease;
-}
-
-.dashboard-logo-img:hover {
-  transform: scale(1.05);
-}
-
+/* Typography elements */
 h2 {
   font-size: 1.75rem;
   font-weight: 700;
@@ -119,15 +63,7 @@ h3 {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1.2rem;
-}
-
-h4 {
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  color: var(--accent);
-  letter-spacing: 0.05em;
-  margin-bottom: 0.75rem;
-  margin-top: 0.5rem;
+  color: var(--text-main);
 }
 
 .subtitle {
@@ -136,6 +72,7 @@ h4 {
   font-size: 0.95rem;
 }
 
+/* Forms & Inputs styling */
 .form-group {
   margin-bottom: 1.25rem;
 }
@@ -143,19 +80,20 @@ h4 {
 label {
   display: block;
   font-size: 0.85rem;
-  color: var(--text-muted);
+  font-weight: 500;
   margin-bottom: 0.5rem;
+  color: var(--text-muted);
 }
 
 input {
   width: 100%;
   padding: 0.75rem;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 6px;
   color: var(--text-main);
   font-size: 1rem;
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  transition: border-color 0.15s ease;
 }
 
 input:focus {
@@ -163,6 +101,7 @@ input:focus {
   border-color: var(--accent);
 }
 
+/* Button UI Definitions */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -173,6 +112,7 @@ input:focus {
   border-radius: 6px;
   border: none;
   cursor: pointer;
+  transition: background-color 0.15s ease;
   width: 100%;
 }
 
@@ -181,18 +121,38 @@ input:focus {
   color: #fff;
 }
 
+.btn-primary:hover {
+  background-color: var(--accent-hover);
+}
+
 .btn-secondary {
   background-color: var(--bg-secondary);
   color: var(--text-main);
   border: 1px solid var(--border-color);
   width: auto;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .btn-secondary:hover {
-  background-color: var(--bg-primary);
+  background-color: var(--border-color);
 }
 
+.btn-sm {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  width: auto;
+}
+
+.btn-toggle-active {
+  background-color: var(--danger);
+  color: #fff;
+}
+
+.btn-toggle-revoked {
+  background-color: var(--success);
+  color: #fff;
+}
+
+/* Message Banners */
 .error-msg {
   color: var(--danger);
   background-color: rgba(239, 68, 68, 0.1);
@@ -200,8 +160,20 @@ input:focus {
   padding: 0.75rem;
   border-radius: 6px;
   margin-bottom: 1rem;
+  font-size: 0.9rem;
 }
 
+.success-msg {
+  color: var(--success);
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Layout Dashboards structure */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -209,12 +181,6 @@ input:focus {
   margin-bottom: 2.5rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--border-color);
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
 }
 
 .dashboard-grid {
@@ -232,103 +198,74 @@ input:focus {
   }
 }
 
-/* Sidebar Custom Clickable Menu System */
-.flex-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+/* Table Design Pattern */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
 }
 
-.category-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.menu-item-btn {
+table {
+  width: 100%;
+  border-collapse: collapse;
   text-align: left;
-  background-color: var(--bg-secondary);
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
+}
+
+th, td {
   padding: 0.75rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  border-bottom: 1px solid var(--border-color);
 }
 
-.menu-item-btn:hover {
-  background-color: var(--bg-primary);
-  border-color: var(--accent);
-  padding-left: 1.25rem;
-}
-
-/* History Display Panels & Dividers */
-.section-divider {
-  border: 0;
-  height: 1px;
-  background-color: var(--border-color);
-  margin: 2rem 0;
-}
-
-.history-card {
-  animation: fadeIn 0.2s ease-in-out;
-}
-
-.history-item {
-  background: var(--bg-secondary);
-  padding: 1rem;
-  border-radius: 6px;
-  margin-bottom: 0.75rem;
-  border-left: 4px solid var(--accent);
-  transition: background-color 0.3s ease;
-}
-
-/* Gimmicks Grid & Badges Design */
-.gimmick-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-@media (min-width: 500px) {
-  .gimmick-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.gimmick-badge {
-  background: linear-gradient(135deg, var(--gimmick-gradient-start), var(--gimmick-gradient-end));
-  border: 1px solid var(--border-color);
-  padding: 1rem;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  transition: border-color 0.3s ease;
-}
-
-.gimmick-badge.elite {
-  border-color: #a855f7;
-}
-
-.gimmick-badge.champion {
-  border-color: var(--gold);
-}
-
-.gimmick-title {
-  font-size: 0.75rem;
-  text-transform: uppercase;
+th {
+  font-size: 0.85rem;
   color: var(--text-muted);
+  text-transform: uppercase;
   font-weight: 600;
 }
 
-.gimmick-name {
-  font-size: 1.1rem;
+/* Badges Status UI */
+.badge {
+  display: inline-flex;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.badge-active {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+
+.badge-revoked {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+.active-workspace {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.status-indicator-box {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-dot.online {
+  background-color: var(--success);
+  box-shadow: 0 0 8px var(--success);
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(2px); }
+  from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }

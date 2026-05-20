@@ -1,217 +1,242 @@
 "use strict";
 
-// 1. FIXED USER REGISTRATION VALIDATION CREDENTIALS
+// 1. SYSTEM BASE CONFIGURATION & MOCK STORAGE DATA
 const ADMIN_CREDENTIALS = {
-  username: "adminjon",
-  password: "JonAdmin123"
+  username: "admin@system.local",
+  password: "AdminPass123!"
 };
 
-// 2. TOURNAMENT DATABASE CODES
-const HISTORICAL_DATA_STORE = {
-  elite_league: {
-    title: "ELITE LEAGUE HALL OF FAME",
-    description: "Historical tracking for top-tier premier league campaigns. AC Milan (Prateek) holds the record for most titles.",
-    headers: ["Season", "Champion Team / Player"],
-    records: [
-      { season: "Season 5", winner: "AC Milan (Prateek)" },
-      { season: "Season 4", winner: "The Destroyer (Kiran)" },
-      { season: "Season 3", winner: "AC Milan (Prateek)" },
-      { season: "Season 2", winner: "AC Milan (Prateek)" },
-      { season: "Season 1", winner: "AC Milan (Prateek)" }
-    ]
-  },
-  elite_division: {
-    title: "ELITE DIVISION LEAGUE RECORDS",
-    description: "Divisional developmental tiers and qualification tournament histories.",
-    headers: ["Season", "Champion Team / Player"],
-    records: [
-      { season: "Season 5", winner: "PesNepal•Leo (Subash)" },
-      { season: "Season 4", winner: "Pasa FC (Manjil)" },
-      { season: "Season 3", winner: "Meher Sharma" },
-      { season: "Season 2", winner: "Sagar" },
-      { season: "Season 1", winner: "Bhaktapur Futsal" }
-    ]
-  },
-  pes_camp: {
-    title: "PES LEAGUE CAMP RECORDS",
-    description: "Official chronicles and placement rankings for the PES League training grounds.",
-    headers: ["Season", "Champion Team / Player"],
-    records: [
-      { season: "Season 5", winner: "Blue Lock XI (Ashman)" },
-      { season: "Season 4", winner: "AC Milan (Prateek)" },
-      { season: "Season 3", winner: "Brazil (Sagar)" },
-      { season: "Season 2", winner: "AC Milan (Prateek)" },
-      { season: "Season 1", winner: "FC Legends" }
-    ]
-  },
-  ultimate_player: {
-    title: "ULTIMATE PLAYER BRACKET RECORDS",
-    description: "Knockout classification records tracking the absolute peak bracket challengers.",
-    headers: ["Season", "Champion Team / Player"],
-    records: [
-      { season: "Season 11", winner: "PesNepal-Naughty08 (Manees)" },
-      { season: "Season 10", winner: "Avengers SCO (Sagar)" },
-      { season: "Season 9", winner: "LYTHX_11 (Manjil)" },
-      { season: "Season 8", winner: "Cold Palmer (Hrijwan)" },
-      { season: "Season 7", winner: "Cold Palmer (Hrijwan)" },
-      { season: "Season 6", winner: "AC Milan (Prateek)" },
-      { season: "Season 5", winner: "The Destroyer (Kiran)" },
-      { season: "Season 4", winner: "Blue Lock XI (Ashman)" },
-      { season: "Season 3", winner: "Black Hornet (Dipendra)" },
-      { season: "Season 2", winner: "Black Hornet (Dipendra)" },
-      { season: "Season 1", winner: "Black Hornet (Dipendra)" }
-    ]
-  }
+// Application Global State Context Manager
+let state = {
+  currentUser: null,
+  staffAccounts: []
 };
 
-let activeSessionUser = null;
-
+// DOM Node Selectors Optimization Mapping
 const elements = {
-  htmlNode: document.documentElement,
   loginView: document.getElementById("login-view"),
   adminView: document.getElementById("admin-view"),
+  staffView: document.getElementById("staff-view"),
   loginForm: document.getElementById("login-form"),
+  provisionForm: document.getElementById("provision-form"),
   loginUsernameInput: document.getElementById("login-username"),
   loginPasswordInput: document.getElementById("login-password"),
   loginError: document.getElementById("login-error"),
+  provisionUsernameInput: document.getElementById("staff-username"),
+  provisionPasswordInput: document.getElementById("staff-password"),
+  provisionError: document.getElementById("provision-error"),
+  provisionSuccess: document.getElementById("provision-success"),
+  staffTableBody: document.getElementById("staff-table-body"),
   adminWelcome: document.getElementById("admin-welcome-msg"),
-  dynamicDisplay: document.getElementById("dynamic-display-panel"),
-  themeToggleBtn: document.getElementById("theme-toggle-btn"),
-  themeIcon: document.getElementById("theme-icon"),
+  staffWelcome: document.getElementById("staff-welcome-msg"),
   logoutButtons: document.querySelectorAll(".logout-btn")
 };
 
-// 3. DARK / LIGHT OPTICAL MODE CONFIGURATION MODULE
-function initThemeEngine() {
-  const savedTheme = localStorage.getItem("pes_matches_theme") || "dark";
-  elements.htmlNode.setAttribute("data-theme", savedTheme);
-  updateThemeButtonUI(savedTheme);
-
-  elements.themeToggleBtn.addEventListener("click", () => {
-    const activeTheme = elements.htmlNode.getAttribute("data-theme");
-    const alternateTheme = activeTheme === "dark" ? "light" : "dark";
-    
-    elements.htmlNode.setAttribute("data-theme", alternateTheme);
-    localStorage.setItem("pes_matches_theme", alternateTheme);
-    updateThemeButtonUI(alternateTheme);
-  });
-}
-
-function updateThemeButtonUI(theme) {
-  if (theme === "light") {
-    elements.themeIcon.innerText = "🌙 Dark Mode";
+// 2. STATE SYNCHRONIZATION RUNTIME HOOKS
+function initializeSystemData() {
+  const localStore = localStorage.getItem("system_staff_accounts");
+  if (localStore) {
+    state.staffAccounts = JSON.parse(localStore);
   } else {
-    elements.themeIcon.innerText = "☀️ Light Mode";
+    // Generate initial baseline setup directory
+    state.staffAccounts = [
+      { id: "1", username: "staff_alpha", password: "StaffPassword1!", status: "Active" },
+      { id: "2", username: "staff_beta", password: "StaffPassword2!", status: "Revoked" }
+    ];
+    persistStaffAccounts();
+  }
+  
+  // Rehydrate existing runtime session token instances if available
+  const activeSession = sessionStorage.getItem("active_session");
+  if (activeSession) {
+    state.currentUser = JSON.parse(activeSession);
+    routeToDashboard(state.currentUser.role);
+  } else {
+    renderView("login");
   }
 }
 
-function verifyActiveSession() {
-  const preservedToken = sessionStorage.getItem("active_archive_session");
-  if (preservedToken) {
-    activeSessionUser = JSON.parse(preservedToken);
-    showDashboard();
-  } else {
-    toggleInterfaceView("login");
-  }
+function persistStaffAccounts() {
+  localStorage.setItem("system_staff_accounts", JSON.stringify(state.staffAccounts));
 }
 
-function toggleInterfaceView(targetView) {
+// 3. SECURE INTERACTION ROUTER VIEW-SWITCHER
+function renderView(viewName) {
   elements.loginView.classList.add("hidden");
   elements.adminView.classList.add("hidden");
+  elements.staffView.classList.add("hidden");
 
-  if (targetView === "login") {
+  if (viewName === "login") {
     elements.loginView.classList.remove("hidden");
-  } else if (targetView === "dashboard") {
+  } else if (viewName === "Admin") {
     elements.adminView.classList.remove("hidden");
+    renderStaffDirectory();
+  } else if (viewName === "Staff") {
+    elements.staffView.classList.remove("hidden");
   }
 }
 
-function showDashboard() {
-  elements.adminWelcome.innerText = `Logged in securely as: ${activeSessionUser.username}`;
-  toggleInterfaceView("dashboard");
+function routeToDashboard(role) {
+  if (role === "Admin") {
+    elements.adminWelcome.innerText = `Logged in securely as: ${state.currentUser.username}`;
+    renderView("Admin");
+  } else if (role === "Staff") {
+    elements.staffWelcome.innerText = `Operator Session: ${state.currentUser.username}`;
+    renderView("Staff");
+  }
 }
 
-elements.loginForm.addEventListener("submit", function(e) {
-  e.preventDefault();
+// 4. AUTHENTICATION CONTROLLER RUNTIME PIPELINE
+elements.loginForm.addEventListener("submit", function(event) {
+  event.preventDefault();
   elements.loginError.classList.add("hidden");
+  elements.loginError.innerText = "";
 
-  const enteredUser = elements.loginUsernameInput.value.trim();
-  const enteredPass = elements.loginPasswordInput.value;
+  const inputUser = elements.loginUsernameInput.value.trim();
+  const inputPass = elements.loginPasswordInput.value;
 
-  if (enteredUser === ADMIN_CREDENTIALS.username && enteredPass === ADMIN_CREDENTIALS.password) {
-    activeSessionUser = { username: enteredUser };
-    sessionStorage.setItem("active_archive_session", JSON.stringify(activeSessionUser));
-    showDashboard();
+  // Evaluate Root Administrative Level Authority Chain
+  if (inputUser === ADMIN_CREDENTIALS.username && inputPass === ADMIN_CREDENTIALS.password) {
+    state.currentUser = { username: inputUser, role: "Admin" };
+    sessionStorage.setItem("active_session", JSON.stringify(state.currentUser));
+    routeToDashboard("Admin");
     elements.loginForm.reset();
-  } else {
-    elements.loginError.innerText = "Authentication Failed: Invalid username or security credentials.";
-    elements.loginError.classList.remove("hidden");
+    return;
   }
-});
 
-window.showHistory = function(categoryKey) {
-  const targetCategory = HISTORICAL_DATA_STORE[categoryKey];
-  if (!targetCategory) return;
-
-  elements.dynamicDisplay.innerHTML = "";
-
-  const layoutContainer = document.createElement("div");
-  layoutContainer.className = "history-card";
-
-  let tableRowsHtml = "";
+  // Evaluate Staff Account Execution Chain Strategy
+  const foundStaff = state.staffAccounts.find(account => account.username === inputUser);
   
-  targetCategory.records.forEach(row => {
-    let cellStyle = "";
-    if (row.winner.includes("Prateek") || row.winner.includes("Dipendra")) {
-      cellStyle = 'style="color: var(--gold); font-weight: 600;"';
+  if (foundStaff) {
+    if (foundStaff.password === inputPass) {
+      if (foundStaff.status === "Revoked") {
+        elements.loginError.innerText = "Authentication Failed: This staff account access privileges have been revoked.";
+        elements.loginError.classList.remove("hidden");
+        return;
+      }
+      
+      state.currentUser = { username: foundStaff.username, role: "Staff" };
+      sessionStorage.setItem("active_session", JSON.stringify(state.currentUser));
+      routeToDashboard("Staff");
+      elements.loginForm.reset();
+      return;
     }
+  }
 
-    tableRowsHtml += `
-      <tr>
-        <td style="width: 30%; font-weight: 500; color: var(--accent); padding: 0.75rem 0.5rem; border-bottom: 1px solid var(--border-color);">${escapeHtml(row.season)}</td>
-        <td ${cellStyle} style="padding: 0.75rem 0.5rem; border-bottom: 1px solid var(--border-color);">${escapeHtml(row.winner)}</td>
-      </tr>
-    `;
-  });
-
-  layoutContainer.innerHTML = `
-    <h3>${targetCategory.title}</h3>
-    <p class="subtitle" style="margin-bottom: 1.5rem;">${targetCategory.description}</p>
-    <div class="table-responsive">
-      <table style="width: 100%; border-collapse: collapse; text-align: left;">
-        <thead>
-          <tr style="border-bottom: 2px solid var(--border-color);">
-            <th style="padding: 0.75rem 0.5rem; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">${targetCategory.headers[0]}</th>
-            <th style="padding: 0.75rem 0.5rem; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">${targetCategory.headers[1]}</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${tableRowsHtml}
-        </tbody>
-      </table>
-    </div>
-  `;
-
-  elements.dynamicDisplay.appendChild(layoutContainer);
-};
-
-elements.logoutButtons.forEach(button => {
-  button.addEventListener("click", function() {
-    activeSessionUser = null;
-    sessionStorage.removeItem("active_archive_session");
-    toggleInterfaceView("login");
-    elements.dynamicDisplay.innerHTML = `
-      <h3>Select a category to view history records</h3>
-      <p class="subtitle">Click any tournament tier on the left to pull historical server statistics.</p>
-    `;
-  });
+  // Generic global fallback protection statement preventing user scanning
+  elements.loginError.innerText = "Authentication Failed: Invalid username or security credentials.";
+  elements.loginError.classList.remove("hidden");
 });
 
+// 5. ACCOUNT PROVISIONING & REVOCATION SUB-SYSTEM CONTROLLER
+elements.provisionForm.addEventListener("submit", function(event) {
+  event.preventDefault();
+  elements.provisionError.classList.add("hidden");
+  elements.provisionSuccess.classList.add("hidden");
+
+  const newUsername = elements.provisionUsernameInput.value.trim();
+  const newPassword = elements.provisionPasswordInput.value;
+
+  // Prevent collision duplicates with Admin profile space definitions
+  if (newUsername.toLowerCase() === ADMIN_CREDENTIALS.username.toLowerCase()) {
+    elements.provisionError.innerText = "Error: System structural namespace collision with Admin account designation.";
+    elements.provisionError.classList.remove("hidden");
+    return;
+  }
+
+  // Confirm standard directory schema constraint logic uniqueness metrics
+  const identityExists = state.staffAccounts.some(account => account.username.toLowerCase() === newUsername.toLowerCase());
+  if (identityExists) {
+    elements.provisionError.innerText = "Error: A database resource with that username configuration already exists.";
+    elements.provisionError.classList.remove("hidden");
+    return;
+  }
+
+  // Provision item registration payload execution
+  const newAccount = {
+    id: Date.now().toString(),
+    username: newUsername,
+    password: newPassword,
+    status: "Active"
+  };
+
+  state.staffAccounts.push(newAccount);
+  persistStaffAccounts();
+  renderStaffDirectory();
+  
+  elements.provisionSuccess.classList.remove("hidden");
+  elements.provisionForm.reset();
+});
+
+function toggleStaffStatus(id) {
+  state.staffAccounts = state.staffAccounts.map(account => {
+    if (account.id === id) {
+      const updatedStatus = account.status === "Active" ? "Revoked" : "Active";
+      return { ...account, status: updatedStatus };
+    }
+    return account;
+  });
+
+  persistStaffAccounts();
+  renderStaffDirectory();
+
+  // Enforce session eviction check if updated profile configuration maps to live operator data state
+  if (state.currentUser && state.currentUser.role === "Staff") {
+    const updatedRecord = state.staffAccounts.find(acc => acc.id === id);
+    if (updatedRecord && updatedRecord.username === state.currentUser.username && updatedRecord.status === "Revoked") {
+      executeTerminationSequence();
+    }
+  }
+}
+
+function renderStaffDirectory() {
+  elements.staffTableBody.innerHTML = "";
+
+  if (state.staffAccounts.length === 0) {
+    elements.staffTableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No managed staff accounts configured in data directory.</td></tr>`;
+    return;
+  }
+
+  state.staffAccounts.forEach(account => {
+    const tableRow = document.createElement("tr");
+
+    const badgeClass = account.status === "Active" ? "badge-active" : "badge-revoked";
+    const actionButtonText = account.status === "Active" ? "Revoke Access" : "Grant Access";
+    const actionButtonClass = account.status === "Active" ? "btn-toggle-active" : "btn-toggle-revoked";
+
+    tableRow.innerHTML = `
+      <td><strong>${escapeHtml(account.username)}</strong></td>
+      <td><span class="text-muted">Staff Operator</span></td>
+      <td><span class="badge ${badgeClass}">${account.status}</span></td>
+      <td>
+        <button class="btn btn-sm ${actionButtonClass}" data-id="${account.id}">${actionButtonText}</button>
+      </td>
+    `;
+
+    // Operational event interception framework attachment
+    tableRow.querySelector("button").addEventListener("click", function() {
+      toggleStaffStatus(account.id);
+    });
+
+    elements.staffTableBody.appendChild(tableRow);
+  });
+}
+
+// 6. TERMINATION PROTOCOL LAYER (LOGOUT)
+elements.logoutButtons.forEach(btn => {
+  btn.addEventListener("click", executeTerminationSequence);
+});
+
+function executeTerminationSequence() {
+  state.currentUser = null;
+  sessionStorage.removeItem("active_session");
+  renderView("login");
+}
+
+// XSS Mitigation Strategy sanitization layer
 function escapeHtml(str) {
   return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  initThemeEngine();
-  verifyActiveSession();
-});
+// Initialize Application Engine Execution Scope Context
+document.addEventListener("DOMContentLoaded", initializeSystemData);
