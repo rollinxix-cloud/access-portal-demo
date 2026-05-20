@@ -8,6 +8,7 @@ html[data-theme="dark"] {
   --border-color: #334155;
   --gimmick-gradient-start: #1e293b;
   --gimmick-gradient-end: #0f172a;
+  --calc-output-bg: #1f2937;
 }
 
 html[data-theme="light"] {
@@ -19,6 +20,7 @@ html[data-theme="light"] {
   --border-color: #e2e8f0;
   --gimmick-gradient-start: #f8fafc;
   --gimmick-gradient-end: #e2e8f0;
+  --calc-output-bg: #f8fafc;
 }
 
 :root {
@@ -45,7 +47,7 @@ body {
 }
 
 #app {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -62,7 +64,7 @@ body {
   background-color: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  padding: 2rem;
+  padding: 1.75rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
@@ -72,7 +74,7 @@ body {
   margin: 4rem auto 0 auto;
 }
 
-/* Brand Identity Branding Elements */
+/* Brand Identity Elements */
 .brand-header-center {
   display: flex;
   flex-direction: column;
@@ -138,6 +140,7 @@ h4 {
 
 .form-group {
   margin-bottom: 1.25rem;
+  width: 100%;
 }
 
 label {
@@ -217,22 +220,20 @@ input:focus {
   gap: 0.75rem;
 }
 
+/* Three Column Dashboard Grid Configuration */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .dashboard-grid {
-    grid-template-columns: 1fr 2fr;
-  }
-  .grid-span-2 {
-    grid-column: span 2;
+    grid-template-columns: 280px 1fr 340px;
   }
 }
 
-/* Sidebar Custom Clickable Menu System */
+/* Sidebar Custom Menu System */
 .flex-menu {
   display: flex;
   flex-direction: column;
@@ -275,16 +276,7 @@ input:focus {
   animation: fadeIn 0.2s ease-in-out;
 }
 
-.history-item {
-  background: var(--bg-secondary);
-  padding: 1rem;
-  border-radius: 6px;
-  margin-bottom: 0.75rem;
-  border-left: 4px solid var(--accent);
-  transition: background-color 0.3s ease;
-}
-
-/* Gimmicks Grid & Badges Design */
+/* Gimmicks Grid Layout */
 .gimmick-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -292,7 +284,7 @@ input:focus {
   margin-top: 1rem;
 }
 
-@media (min-width: 500px) {
+@media (min-width: 576px) {
   .gimmick-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -306,27 +298,58 @@ input:focus {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  transition: border-color 0.3s ease;
 }
 
-.gimmick-badge.elite {
-  border-color: #a855f7;
+.gimmick-badge.elite { border-color: #a855f7; }
+.gimmick-badge.champion { border-color: var(--gold); }
+.gimmick-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
+.gimmick-name { font-size: 1.1rem; }
+
+/* 2. PRIZE CALCULATOR SPECIFIC STYLES */
+.split-ratio-row {
+  display: flex;
+  gap: 1fr;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
-.gimmick-badge.champion {
-  border-color: var(--gold);
+.ratio-warning {
+  color: var(--danger);
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
 }
 
-.gimmick-title {
-  font-size: 0.75rem;
-  text-transform: uppercase;
+.calc-results-container {
+  background-color: var(--calc-output-bg);
+  border: 1px dashed var(--border-color);
+  padding: 1.25rem;
+  border-radius: 6px;
+  margin-top: 1.5rem;
+}
+
+.calc-result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.calc-result-row:last-child {
+  margin-bottom: 0;
+}
+
+.calc-result-row span {
   color: var(--text-muted);
-  font-weight: 600;
 }
 
-.gimmick-name {
-  font-size: 1.1rem;
-}
+.management-cut strong { color: var(--danger); }
+.net-prize-pool { font-weight: 600; border-top: 1px solid var(--border-color); padding-top: 0.75rem; margin-top: 0.75rem; }
+.net-prize-pool strong { color: var(--text-main); }
+.calc-divider { border: 0; height: 1px; background-color: var(--border-color); margin: 0.75rem 0; }
+.prize-winner strong { color: var(--gold); font-size: 1.1rem; }
+.prize-runner strong { color: var(--accent); font-size: 1.05rem; }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(2px); }

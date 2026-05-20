@@ -78,7 +78,17 @@ const elements = {
   dynamicDisplay: document.getElementById("dynamic-display-panel"),
   themeToggleBtn: document.getElementById("theme-toggle-btn"),
   themeIcon: document.getElementById("theme-icon"),
-  logoutButtons: document.querySelectorAll(".logout-btn")
+  logoutButtons: document.querySelectorAll(".logout-btn"),
+  
+  // Calculator Node Links
+  calcTotalPool: document.getElementById("calc-total-pool"),
+  calcWinnerRatio: document.getElementById("calc-winner-ratio"),
+  calcRunnerRatio: document.getElementById("calc-runner-ratio"),
+  calcRatioWarning: document.getElementById("calc-ratio-warning"),
+  resAdminCut: document.getElementById("res-admin-cut"),
+  resNetPool: document.getElementById("res-net-pool"),
+  resWinnerPrize: document.getElementById("res-winner-prize"),
+  resRunnerPrize: document.getElementById("res-runner-prize")
 };
 
 // 3. DARK / LIGHT OPTICAL MODE CONFIGURATION MODULE
@@ -195,6 +205,34 @@ window.showHistory = function(categoryKey) {
   elements.dynamicDisplay.appendChild(layoutContainer);
 };
 
+// 4. REAL-TIME MATHEMATICAL PRIZE POOL CALCULATOR LOGIC
+window.calculatePrizes = function() {
+  const totalPool = parseFloat(elements.calcTotalPool.value) || 0;
+  const winnerRatio = parseFloat(elements.calcWinnerRatio.value) || 0;
+  const runnerRatio = parseFloat(elements.calcRunnerRatio.value) || 0;
+
+  // Validation loop ensuring ratio integrity bounds are preserved
+  if (winnerRatio + runnerRatio !== 100) {
+    elements.calcRatioWarning.classList.remove("hidden");
+  } else {
+    elements.calcRatioWarning.classList.add("hidden");
+  }
+
+  // Calculate strict 15% charge for admin operations
+  const adminCut = totalPool * 0.15;
+  const netPrizePool = totalPool - adminCut;
+
+  // Distribute remaining balances across ratios
+  const winnerReward = netPrizePool * (winnerRatio / 100);
+  const runnerReward = netPrizePool * (runnerRatio / 100);
+
+  // Render variables cleanly as currency streams
+  elements.resAdminCut.innerText = `Rs. ${adminCut.toFixed(2)}`;
+  elements.resNetPool.innerText = `Rs. ${netPrizePool.toFixed(2)}`;
+  elements.resWinnerPrize.innerText = `Rs. ${winnerReward.toFixed(2)}`;
+  elements.resRunnerPrize.innerText = `Rs. ${runnerReward.toFixed(2)}`;
+};
+
 elements.logoutButtons.forEach(button => {
   button.addEventListener("click", function() {
     activeSessionUser = null;
@@ -204,6 +242,9 @@ elements.logoutButtons.forEach(button => {
       <h3>Select a category to view history records</h3>
       <p class="subtitle">Click any tournament tier on the left to pull historical server statistics.</p>
     `;
+    // Clear out operational numbers on interface exit
+    elements.calcTotalPool.value = "";
+    calculatePrizes();
   });
 });
 
