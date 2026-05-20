@@ -6,7 +6,7 @@ const ADMIN_CREDENTIALS = {
   password: "JonAdmin123"
 };
 
-// 2. COMPREHENSIVE TOURNAMENT WINNERS HISTORICAL DATABASE
+// 2. TOURNAMENT DATABASE CODES
 const HISTORICAL_DATA_STORE = {
   elite_league: {
     title: "ELITE LEAGUE HALL OF FAME",
@@ -67,6 +67,7 @@ const HISTORICAL_DATA_STORE = {
 let activeSessionUser = null;
 
 const elements = {
+  htmlNode: document.documentElement,
   loginView: document.getElementById("login-view"),
   adminView: document.getElementById("admin-view"),
   loginForm: document.getElementById("login-form"),
@@ -75,8 +76,34 @@ const elements = {
   loginError: document.getElementById("login-error"),
   adminWelcome: document.getElementById("admin-welcome-msg"),
   dynamicDisplay: document.getElementById("dynamic-display-panel"),
+  themeToggleBtn: document.getElementById("theme-toggle-btn"),
+  themeIcon: document.getElementById("theme-icon"),
   logoutButtons: document.querySelectorAll(".logout-btn")
 };
+
+// 3. DARK / LIGHT OPTICAL MODE CONFIGURATION MODULE
+function initThemeEngine() {
+  const savedTheme = localStorage.getItem("pes_matches_theme") || "dark";
+  elements.htmlNode.setAttribute("data-theme", savedTheme);
+  updateThemeButtonUI(savedTheme);
+
+  elements.themeToggleBtn.addEventListener("click", () => {
+    const activeTheme = elements.htmlNode.getAttribute("data-theme");
+    const alternateTheme = activeTheme === "dark" ? "light" : "dark";
+    
+    elements.htmlNode.setAttribute("data-theme", alternateTheme);
+    localStorage.setItem("pes_matches_theme", alternateTheme);
+    updateThemeButtonUI(alternateTheme);
+  });
+}
+
+function updateThemeButtonUI(theme) {
+  if (theme === "light") {
+    elements.themeIcon.innerText = "🌙 Dark Mode";
+  } else {
+    elements.themeIcon.innerText = "☀️ Light Mode";
+  }
+}
 
 function verifyActiveSession() {
   const preservedToken = sessionStorage.getItem("active_archive_session");
@@ -104,7 +131,6 @@ function showDashboard() {
   toggleInterfaceView("dashboard");
 }
 
-// 3. SECURE AUTHENTICATION PIPELINE INTERCEPTION ENGINE
 elements.loginForm.addEventListener("submit", function(e) {
   e.preventDefault();
   elements.loginError.classList.add("hidden");
@@ -123,7 +149,6 @@ elements.loginForm.addEventListener("submit", function(e) {
   }
 });
 
-// 4. CLICKABLE DYNAMIC DISPLAY ROUTER STRATEGY (TABLE BASED)
 window.showHistory = function(categoryKey) {
   const targetCategory = HISTORICAL_DATA_STORE[categoryKey];
   if (!targetCategory) return;
@@ -133,11 +158,9 @@ window.showHistory = function(categoryKey) {
   const layoutContainer = document.createElement("div");
   layoutContainer.className = "history-card";
 
-  // Formulate semantic HTML table rows safely
   let tableRowsHtml = "";
   
   targetCategory.records.forEach(row => {
-    // Styling highlights for multi-time legendary champions
     let cellStyle = "";
     if (row.winner.includes("Prateek") || row.winner.includes("Dipendra")) {
       cellStyle = 'style="color: var(--gold); font-weight: 600;"';
@@ -145,8 +168,8 @@ window.showHistory = function(categoryKey) {
 
     tableRowsHtml += `
       <tr>
-        <td style="width: 30%; font-weight: 500; color: var(--accent);">${escapeHtml(row.season)}</td>
-        <td ${cellStyle}>${escapeHtml(row.winner)}</td>
+        <td style="width: 30%; font-weight: 500; color: var(--accent); padding: 0.75rem 0.5rem; border-bottom: 1px solid var(--border-color);">${escapeHtml(row.season)}</td>
+        <td ${cellStyle} style="padding: 0.75rem 0.5rem; border-bottom: 1px solid var(--border-color);">${escapeHtml(row.winner)}</td>
       </tr>
     `;
   });
@@ -172,7 +195,6 @@ window.showHistory = function(categoryKey) {
   elements.dynamicDisplay.appendChild(layoutContainer);
 };
 
-// 5. SECURITY DISCONNECT EXIT SEQUENCING LAYER
 elements.logoutButtons.forEach(button => {
   button.addEventListener("click", function() {
     activeSessionUser = null;
@@ -189,4 +211,7 @@ function escapeHtml(str) {
   return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
-document.addEventListener("DOMContentLoaded", verifyActiveSession);
+document.addEventListener("DOMContentLoaded", () => {
+  initThemeEngine();
+  verifyActiveSession();
+});

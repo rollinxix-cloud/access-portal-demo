@@ -1,17 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tournament Archive Hub</title>
+  <title>PES MATCHES Hub</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="app">
     <section id="login-view" class="view-panel">
       <div class="card auth-card">
-        <h2>System Login</h2>
-        <p class="subtitle">Enter your system credentials to proceed</p>
+        <div class="brand-header-center">
+          <img src="https://graph.facebook.com/groups/pesmatches/picture?type=large" alt="PES MATCHES Logo" class="brand-logo-img">
+          <h2>PES MATCHES Login</h2>
+        </div>
+        <p class="subtitle">Enter your community credentials to proceed</p>
         
         <form id="login-form">
           <div class="form-group">
@@ -30,11 +33,21 @@
 
     <section id="admin-view" class="view-panel hidden">
       <header class="dashboard-header">
-        <div>
-          <h1>Tournament Archive Hub</h1>
-          <p id="admin-welcome-msg">Logged in securely</p>
+        <div class="header-brand-container">
+          <a href="https://www.facebook.com/groups/pesmatches" target="_blank" title="Visit PES MATCHES Facebook Group">
+            <img src="https://graph.facebook.com/groups/pesmatches/picture?type=large" alt="PES MATCHES Logo" class="dashboard-logo-img">
+          </a>
+          <div>
+            <h1>PES MATCHES</h1>
+            <p id="admin-welcome-msg">Logged in securely</p>
+          </div>
         </div>
-        <button class="btn btn-secondary logout-btn">Secure Logout</button>
+        <div class="header-actions">
+          <button id="theme-toggle-btn" class="btn btn-secondary theme-btn" aria-label="Toggle light and dark themes">
+            <span id="theme-icon">☀️ Light Mode</span>
+          </button>
+          <button class="btn btn-secondary logout-btn">Secure Logout</button>
+        </div>
       </header>
 
       <div class="dashboard-grid">
