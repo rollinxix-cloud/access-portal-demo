@@ -7,8 +7,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="animated-bg-overlay"></div>
-
   <div id="app">
     <section id="login-view" class="view-panel">
       <div class="card auth-card">
@@ -45,140 +43,51 @@
           </div>
         </div>
         <div class="header-actions">
-          <button id="theme-toggle-btn" class="btn btn-secondary theme-btn">
+          <button id="theme-toggle-btn" class="btn btn-secondary theme-btn" aria-label="Toggle light and dark themes">
             <span id="theme-icon">☀️ Light Mode</span>
           </button>
           <button class="btn btn-secondary logout-btn">Secure Logout</button>
         </div>
       </header>
 
-      <div class="tab-navigation-bar">
-        <button id="tab-btn-records" class="tab-link active" onclick="switchTab('records')">🏆 Tournament Records</button>
-        <button id="tab-btn-calculator" class="tab-link" onclick="switchTab('calculator')">📊 Financial Calculator & Logs</button>
-      </div>
-
-      <div id="tab-content-records" class="tab-panel-view">
-        <div class="dashboard-grid">
-          <div class="card flex-menu">
-            <h3>Tournament Tiers</h3>
-            <div class="category-group">
-              <h4>League Tournament</h4>
-              <button class="menu-item-btn" onclick="showHistory('elite_league')">ELITE LEAGUE</button>
-              <button class="menu-item-btn" onclick="showHistory('elite_division')">ELITE DIVISION LEAGUE</button>
-              <button class="menu-item-btn" onclick="showHistory('pes_camp')">PES LEAGUE CAMP</button>
-            </div>
-            <div class="category-group">
-              <h4>Knockout Tournament</h4>
-              <button class="menu-item-btn" onclick="showHistory('ultimate_player')">ULTIMATE PLAYER</button>
-            </div>
+      <div class="dashboard-grid">
+        <div class="card flex-menu">
+          <h3>Tournament Categories</h3>
+          <div class="category-group">
+            <h4>League Tournament</h4>
+            <button class="menu-item-btn" onclick="showHistory('elite_league')">ELITE LEAGUE</button>
+            <button class="menu-item-btn" onclick="showHistory('elite_division')">ELITE DIVISION LEAGUE</button>
+            <button class="menu-item-btn" onclick="showHistory('pes_camp')">PES LEAGUE CAMP</button>
           </div>
-
-          <div class="card grid-span-2">
-            <div id="dynamic-display-panel">
-              <h3>Select a category to view history records</h3>
-              <p class="subtitle">Click any tournament tier on the left to pull historical server statistics.</p>
-            </div>
-
-            <hr class="section-divider">
-
-            <div class="gimmicks-section">
-              <h3>PES MATCHES Gimmicks</h3>
-              <div class="gimmick-grid">
-                <div class="gimmick-badge">
-                  <span class="gimmick-title">Best Player</span>
-                  <strong class="gimmick-name">Siv Sunar</strong>
-                </div>
-                <div class="gimmick-badge elite">
-                  <span class="gimmick-title">Undisputed Ultimate Player</span>
-                  <strong class="gimmick-name">Dipendra</strong>
-                </div>
-                <div class="gimmick-badge champion">
-                  <span class="gimmick-title">Undisputed Elite League Winner</span>
-                  <strong class="gimmick-name">Prateek Khadka</strong>
-                </div>
-              </div>
-            </div>
+          <div class="category-group">
+            <h4>Knockout Tournament</h4>
+            <button class="menu-item-btn" onclick="showHistory('ultimate_player')">ULTIMATE PLAYER</button>
           </div>
         </div>
-      </div>
 
-      <div id="tab-content-calculator" class="tab-panel-view hidden">
-        <div class="dashboard-grid">
-          <div class="card">
-            <h3>Host Fee Calculator</h3>
-            <p class="subtitle">Deducts 15% hosting cut automatically</p>
-            
-            <form id="calc-form" oninput="runLiveFinancialCalculation()">
-              <div class="form-group">
-                <label for="calc-tourney-name">Tournament Label</label>
-                <input type="text" id="calc-tourney-name" placeholder="e.g., Elite League Season 6" required>
-              </div>
-              <div class="form-group">
-                <label for="calc-player-count">Total Enrolled Players</label>
-                <input type="number" id="calc-player-count" min="0" placeholder="0" value="16" required>
-              </div>
-              <div class="form-group">
-                <label for="calc-entry-fee">Entry Fee Per Player (Rs.)</label>
-                <input type="number" id="calc-entry-fee" min="0" placeholder="0" value="500" required>
-              </div>
-              <div class="form-group">
-                <label for="calc-split-ratio">Prize Allocation Model</label>
-                <select id="calc-split-ratio" onchange="runLiveFinancialCalculation()">
-                  <option value="70-30">70% Winner / 30% Runner-Up</option>
-                  <option value="60-40">60% Winner / 40% Runner-Up</option>
-                  <option value="100-0">100% Winner Take All</option>
-                </select>
-              </div>
-            </form>
-
-            <div class="calculator-output-screen">
-              <div class="output-row">
-                <span>Gross Prize Pool Collected:</span>
-                <strong id="out-gross">Rs. 8,000</strong>
-              </div>
-              <div class="output-row profit-line">
-                <span>PES Hosting Cut (15%):</span>
-                <strong id="out-profit">Rs. 1,200</strong>
-              </div>
-              <div class="output-row total-payout-line">
-                <span>Net Prize Pool Remaining:</span>
-                <strong id="out-net">Rs. 6,800</strong>
-              </div>
-              <hr style="border-color: rgba(255,255,255,0.1); margin: 0.5rem 0;">
-              <div class="output-row splitting-detail">
-                <span>Winner Payout:</span>
-                <span id="out-winner-split" style="color: var(--gold); font-weight:600;">Rs. 4,760</span>
-              </div>
-              <div class="output-row splitting-detail">
-                <span>Runner-Up Payout:</span>
-                <span id="out-runner-split" style="color: var(--text-main);">Rs. 2,040</span>
-              </div>
-            </div>
-
-            <button type="button" class="btn btn-primary" onclick="commitCalculationToLedger()" style="margin-top:1rem;">💾 Commit & Save To Ledger</button>
+        <div class="card grid-span-2">
+          <div id="dynamic-display-panel">
+            <h3>Select a category to view history records</h3>
+            <p class="subtitle">Click any tournament tier on the left to pull historical server statistics.</p>
           </div>
 
-          <div class="card grid-span-2">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-              <h3>Community Income & Payout Ledger</h3>
-              <button class="btn btn-secondary btn-sm" onclick="clearFinancialLedger()" style="background-color:rgba(239, 68, 68, 0.1); color:var(--danger); border-color:transparent;">Clear All Logs</button>
-            </div>
-            <p class="subtitle">Persistent tracking of internal organization revenues and prize allocations.</p>
-            
-            <div class="table-responsive">
-              <table>
-                <thead>
-                  <tr style="border-bottom: 2px solid var(--border-color);">
-                    <th>Tournament</th>
-                    <th>Collected</th>
-                    <th>Our 15% Fee</th>
-                    <th>Distributed</th>
-                    <th>Payout Details</th>
-                  </tr>
-                </thead>
-                <tbody id="ledger-table-body">
-                  </tbody>
-              </table>
+          <hr class="section-divider">
+
+          <div class="gimmicks-section">
+            <h3>PES MATCHES Gimmicks</h3>
+            <div class="gimmick-grid">
+              <div class="gimmick-badge">
+                <span class="gimmick-title">Best Player</span>
+                <strong class="gimmick-name">Siv Sunar</strong>
+              </div>
+              <div class="gimmick-badge elite">
+                <span class="gimmick-title">Undisputed Ultimate Player</span>
+                <strong class="gimmick-name">Dipendra</strong>
+              </div>
+              <div class="gimmick-badge champion">
+                <span class="gimmick-title">Undisputed Elite League Winner</span>
+                <strong class="gimmick-name">Prateek Khadka</strong>
+              </div>
             </div>
           </div>
         </div>
