@@ -41,7 +41,7 @@ const HISTORICAL_DATA_STORE = {
       { season: "Season 4", winner: "AC Milan (Prateek)" },
       { season: "Season 3", winner: "Brazil (Sagar)" },
       { season: "Season 2", winner: "AC Milan (Prateek)" },
-      { season: "Season 1", winner: "FC Legends" }
+      { season: "Season 1", winner: "FC Legends (Prabin Dahal)" }
     ]
   },
   ultimate_player: {
@@ -91,7 +91,6 @@ const elements = {
   resRunnerPrize: document.getElementById("res-runner-prize")
 };
 
-// 3. DARK / LIGHT OPTICAL MODE CONFIGURATION MODULE
 function initThemeEngine() {
   const savedTheme = localStorage.getItem("pes_matches_theme") || "dark";
   elements.htmlNode.setAttribute("data-theme", savedTheme);
@@ -205,28 +204,25 @@ window.showHistory = function(categoryKey) {
   elements.dynamicDisplay.appendChild(layoutContainer);
 };
 
-// 4. REAL-TIME MATHEMATICAL PRIZE POOL CALCULATOR LOGIC
+// 4. REAL-TIME MATHEMATICAL PRIZE POOL CALCULATOR LOGIC (UPDATED TO 12%)
 window.calculatePrizes = function() {
   const totalPool = parseFloat(elements.calcTotalPool.value) || 0;
   const winnerRatio = parseFloat(elements.calcWinnerRatio.value) || 0;
   const runnerRatio = parseFloat(elements.calcRunnerRatio.value) || 0;
 
-  // Validation loop ensuring ratio integrity bounds are preserved
   if (winnerRatio + runnerRatio !== 100) {
     elements.calcRatioWarning.classList.remove("hidden");
   } else {
     elements.calcRatioWarning.classList.add("hidden");
   }
 
-  // Calculate strict 15% charge for admin operations
-  const adminCut = totalPool * 0.15;
+  // Calculate customized 12% charge for community operations balance
+  const adminCut = totalPool * 0.12;
   const netPrizePool = totalPool - adminCut;
 
-  // Distribute remaining balances across ratios
   const winnerReward = netPrizePool * (winnerRatio / 100);
   const runnerReward = netPrizePool * (runnerRatio / 100);
 
-  // Render variables cleanly as currency streams
   elements.resAdminCut.innerText = `Rs. ${adminCut.toFixed(2)}`;
   elements.resNetPool.innerText = `Rs. ${netPrizePool.toFixed(2)}`;
   elements.resWinnerPrize.innerText = `Rs. ${winnerReward.toFixed(2)}`;
@@ -242,7 +238,6 @@ elements.logoutButtons.forEach(button => {
       <h3>Select a category to view history records</h3>
       <p class="subtitle">Click any tournament tier on the left to pull historical server statistics.</p>
     `;
-    // Clear out operational numbers on interface exit
     elements.calcTotalPool.value = "";
     calculatePrizes();
   });
