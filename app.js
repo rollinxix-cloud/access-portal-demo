@@ -13,6 +13,7 @@ const HISTORICAL_DATA_STORE = {
     description: "Historical tracking for top-tier premier league campaigns. AC Milan (Prateek) holds the record for most titles.",
     headers: ["Season", "Champion Team / Player"],
     records: [
+      { season: "Season 6", winner: "Lythx_11 (Manjil)" },
       { season: "Season 5", winner: "AC Milan (Prateek)" },
       { season: "Season 4", winner: "The Destroyer (Kiran)" },
       { season: "Season 3", winner: "AC Milan (Prateek)" },
@@ -204,7 +205,7 @@ window.showHistory = function(categoryKey) {
   elements.dynamicDisplay.appendChild(layoutContainer);
 };
 
-// 4. REAL-TIME MATHEMATICAL PRIZE POOL CALCULATOR LOGIC (UPDATED TO 12%)
+// 4. REAL-TIME MATHEMATICAL PRIZE POOL CALCULATOR LOGIC (12%)
 window.calculatePrizes = function() {
   const totalPool = parseFloat(elements.calcTotalPool.value) || 0;
   const winnerRatio = parseFloat(elements.calcWinnerRatio.value) || 0;
@@ -216,7 +217,6 @@ window.calculatePrizes = function() {
     elements.calcRatioWarning.classList.add("hidden");
   }
 
-  // Calculate customized 12% charge for community operations balance
   const adminCut = totalPool * 0.12;
   const netPrizePool = totalPool - adminCut;
 
