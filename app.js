@@ -66,6 +66,7 @@ const HISTORICAL_DATA_STORE = {
 };
 
 let activeSessionUser = null;
+let currentCalculatorMode = "standard"; // Default toggle mode state
 
 const elements = {
   htmlNode: document.documentElement,
@@ -82,14 +83,19 @@ const elements = {
   logoutButtons: document.querySelectorAll(".logout-btn"),
   
   // Calculator Node Links
+  calcInstructions: document.getElementById("calc-instructions"),
   calcTotalPool: document.getElementById("calc-total-pool"),
+  calcRatioWrapper: document.getElementById("calc-ratio-wrapper"),
   calcWinnerRatio: document.getElementById("calc-winner-ratio"),
   calcRunnerRatio: document.getElementById("calc-runner-ratio"),
   calcRatioWarning: document.getElementById("calc-ratio-warning"),
+  labelChargeCut: document.getElementById("label-charge-cut"),
+  rowRunnerContainer: document.getElementById("row-runner-container"),
   resAdminCut: document.getElementById("res-admin-cut"),
   resNetPool: document.getElementById("res-net-pool"),
   resWinnerPrize: document.getElementById("res-winner-prize"),
-  resRunnerPrize: document.getElementById("res-runner-prize")
+  resRunnerPrize: document.getElementById("res-runner-prize"),
+  copyToast: document.getElementById("copy-toast")
 };
 
 function initThemeEngine() {
@@ -205,28 +211,94 @@ window.showHistory = function(categoryKey) {
   elements.dynamicDisplay.appendChild(layoutContainer);
 };
 
-// 4. REAL-TIME MATHEMATICAL PRIZE POOL CALCULATOR LOGIC (12%)
+// NEW INTERACTIVE MODE CHANGER SWITCH
+window.switchCalcMode = function(mode) {
+  currentCalculatorMode = mode;
+  
+  document.getElementById("tab-standard").classList.remove("active");
+  document.getElementById("tab-solo").classList.remove("active");
+  
+  if (mode === "standard") {
+    document.getElementById("tab-standard").classList.add("active");
+    elements.calcInstructions.innerText = "Enter total collected entry fees to evaluate the prize pool breakdown with a 12% tournament cut.";
+    elements.calcRatioWrapper.classList.remove("hidden");
+    elements.rowRunnerContainer.classList.remove("hidden");
+    elements.labelChargeCut.innerText = "Tournament Charge (12%)";
+  } else {
+    document.getElementById("tab-solo").classList.add("active");
+    elements.calcInstructions.innerText = "Enter total collected entry fees to evaluate Solo Mode results with a flat 11% tournament charge.";
+    elements.calcRatioWrapper.classList.add("hidden");
+    elements.calcRatioWarning.classList.add("hidden");
+    elements.rowRunnerContainer.classList.add("hidden");
+    elements.labelChargeCut.innerText = "Tournament Charge (11%)";
+  }
+  
+  calculatePrizes();
+};
+
+// UPDATED REAL-TIME DUAL CALCULATOR ENGINE
 window.calculatePrizes = function() {
   const totalPool = parseFloat(elements.calcTotalPool.value) || 0;
-  const winnerRatio = parseFloat(elements.calcWinnerRatio.value) || 0;
-  const runnerRatio = parseFloat(elements.calcRunnerRatio.value) || 0;
+  
+  let adminCut = 0;
+  let netPrizePool = 0;
+  let winnerReward = 0;
+  let runnerReward = 0;
 
-  if (winnerRatio + runnerRatio !== 100) {
-    elements.calcRatioWarning.classList.remove("hidden");
+  if (currentCalculatorMode === "standard") {
+    const winnerRatio = parseFloat(elements.calcWinnerRatio.value) || 0;
+    const runnerRatio = parseFloat(elements.calcRunnerRatio.value) || 0;
+
+    if (winnerRatio + runnerRatio !== 100) {
+      elements.calcRatioWarning.classList.remove("hidden");
+    } else {
+      elements.calcRatioWarning.classList.add("hidden");
+    }
+
+    adminCut = totalPool * 0.12;
+    netPrizePool = totalPool - adminCut;
+    winnerReward = netPrizePool * (winnerRatio / 100);
+    runnerReward = netPrizePool * (runnerRatio / 100);
   } else {
-    elements.calcRatioWarning.classList.add("hidden");
+    // Solo Winner Mode Engine: 11% operational tax, 100% to champion winner
+    adminCut = totalPool * 0.11;
+    netPrizePool = totalPool - adminCut;
+    winnerReward = netPrizePool;
+    runnerReward = 0;
   }
-
-  const adminCut = totalPool * 0.12;
-  const netPrizePool = totalPool - adminCut;
-
-  const winnerReward = netPrizePool * (winnerRatio / 100);
-  const runnerReward = netPrizePool * (runnerRatio / 100);
 
   elements.resAdminCut.innerText = `Rs. ${adminCut.toFixed(2)}`;
   elements.resNetPool.innerText = `Rs. ${netPrizePool.toFixed(2)}`;
   elements.resWinnerPrize.innerText = `Rs. ${winnerReward.toFixed(2)}`;
   elements.resRunnerPrize.innerText = `Rs. ${runnerReward.toFixed(2)}`;
+};
+
+// 10/10 ONE-CLICK CLIPBOARD EXPORTER FOR FACEBOOK CHATS
+window.copyCalcSummary = function() {
+  const total = parseFloat(elements.calcTotalPool.value) || 0;
+  if (total === 0) return;
+
+  const adminCut = elements.resAdminCut.innerText;
+  const netPool = elements.resNetPool.innerText;
+  const winner = elements.resWinnerPrize.innerText;
+  const runner = elements.resRunnerPrize.innerText;
+
+  let textTemplate = "";
+
+  if (currentCalculatorMode === "standard") {
+    textTemplate = `🏆 *PES MATCHES - TOURNAMENT PRIZE POOL* 🏆\n\n💰 Total Pool Collection: ${total} Rs.\n🛡️ Organizer Charge (12%): ${adminCut}\n✨ Playable Prize Pool: ${netPool}\n\n🥇 Winner Reward: ${winner}\n🥈 Runner Up Reward: ${runner}\n\nGLHF to all players! 🎮🔥`;
+  } else {
+    textTemplate = `🏆 *PES MATCHES - SOLO WINNER TAKE ALL* 🏆\n\n💰 Total Pool Collection: ${total} Rs.\n🛡️ Organizer Charge (11%): ${adminCut}\n✨ Playable Prize Pool: ${netPool}\n\n🥇 Champion Reward: ${winner}\n\nWinner takes the glory! 🎮👑`;
+  }
+
+  navigator.clipboard.writeText(textTemplate).then(() => {
+    elements.copyToast.classList.remove("hidden");
+    setTimeout(() => {
+      elements.copyToast.classList.add("hidden");
+    }, 2000);
+  }).catch(err => {
+    console.error("Could not copy summary format text: ", err);
+  });
 };
 
 elements.logoutButtons.forEach(button => {
@@ -239,7 +311,7 @@ elements.logoutButtons.forEach(button => {
       <p class="subtitle">Click any tournament tier on the left to pull historical server statistics.</p>
     `;
     elements.calcTotalPool.value = "";
-    calculatePrizes();
+    switchCalcMode("standard");
   });
 });
 

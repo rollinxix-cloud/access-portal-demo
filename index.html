@@ -8,6 +8,7 @@
 </head>
 <body>
   <div id="app">
+    <!-- 1. UNIFIED LOGIN VIEW -->
     <section id="login-view" class="view-panel">
       <div class="card auth-card">
         <div class="brand-header-center">
@@ -31,6 +32,7 @@
       </div>
     </section>
 
+    <!-- 2. MAIN ARCHIVE DASHBOARD VIEW -->
     <section id="admin-view" class="view-panel hidden">
       <header class="dashboard-header">
         <div class="header-brand-container">
@@ -52,6 +54,7 @@
 
       <div class="dashboard-grid">
         
+        <!-- Left Column: Navigation Sidebar Mapping -->
         <div class="card flex-menu">
           <h3>Tournament Categories</h3>
           <div class="category-group">
@@ -66,6 +69,7 @@
           </div>
         </div>
 
+        <!-- Middle Column: Dynamic History Display Panel -->
         <div class="card middle-content-panel">
           <div id="dynamic-display-panel">
             <h3>Select a category to view history records</h3>
@@ -74,6 +78,7 @@
 
           <hr class="section-divider">
 
+          <!-- Fixed Gimmicks Records Section -->
           <div class="gimmicks-section">
             <h3>PES MATCHES Gimmicks</h3>
             <div class="gimmick-grid">
@@ -93,16 +98,25 @@
           </div>
         </div>
 
+        <!-- Right Column: Enhanced Dual-Mode Prize Budget Calculator -->
         <div class="card calculator-panel">
-          <h3>Prize Pool Calculator</h3>
-          <p class="subtitle">Enter total collected entry fees to evaluate the prize pool breakdown with a 12% tournament cut.</p>
+          <h3>Prize Calculator</h3>
+          
+          <!-- Mode Navigation Tabs -->
+          <div class="calc-tabs">
+            <button id="tab-standard" class="tab-btn active" onclick="switchCalcMode('standard')">Standard (12%)</button>
+            <button id="tab-solo" class="tab-btn" onclick="switchCalcMode('solo')">Solo Winner (11%)</button>
+          </div>
+          
+          <p id="calc-instructions" class="subtitle">Enter total collected entry fees to evaluate the prize pool breakdown with a 12% tournament cut.</p>
           
           <div class="form-group">
             <label for="calc-total-pool">Total Pool Collection (NPR / Rs.)</label>
-            <input type="number" id="calc-total-pool" min="0" placeholder="e.g., 10000" oninput="calculatePrizes()">
+            <input type="number" id="calc-total-pool" min="0" placeholder="e.g., 1200" oninput="calculatePrizes()">
           </div>
 
-          <div class="split-ratio-row">
+          <!-- Ratios Group - Dynamically Hidden in Solo Mode -->
+          <div id="calc-ratio-wrapper" class="split-ratio-row">
             <div class="form-group">
               <label for="calc-winner-ratio">Winner Split (%)</label>
               <input type="number" id="calc-winner-ratio" min="0" max="100" value="70" oninput="calculatePrizes()">
@@ -117,7 +131,7 @@
 
           <div class="calc-results-container">
             <div class="calc-result-row management-cut">
-              <span>Tournament Charge (12%)</span>
+              <span id="label-charge-cut">Tournament Charge (12%)</span>
               <strong id="res-admin-cut">Rs. 0.00</strong>
             </div>
             <div class="calc-result-row net-prize-pool">
@@ -129,11 +143,17 @@
               <span>Winner Reward</span>
               <strong id="res-winner-prize">Rs. 0.00</strong>
             </div>
-            <div class="calc-result-row prize-runner">
+            <div id="row-runner-container" class="calc-result-row prize-runner">
               <span>Runner Up Reward</span>
               <strong id="res-runner-prize">Rs. 0.00</strong>
             </div>
           </div>
+
+          <!-- 10/10 Copy Quick Button Tool -->
+          <button id="copy-summary-btn" class="btn btn-secondary" style="width: 100%; margin-top: 1rem; font-size: 0.85rem;" onclick="copyCalcSummary()">
+            📋 Copy Format for Community
+          </button>
+          <div id="copy-toast" class="toast-msg hidden">Copied text format cleanly!</div>
         </div>
 
       </div>
