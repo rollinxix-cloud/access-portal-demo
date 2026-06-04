@@ -8,7 +8,6 @@
 </head>
 <body>
   <div id="app">
-    <!-- 1. UNIFIED LOGIN VIEW -->
     <section id="login-view" class="view-panel">
       <div class="card auth-card">
         <div class="brand-header-center">
@@ -32,7 +31,6 @@
       </div>
     </section>
 
-    <!-- 2. MAIN ARCHIVE DASHBOARD VIEW -->
     <section id="admin-view" class="view-panel hidden">
       <header class="dashboard-header">
         <div class="header-brand-container">
@@ -54,7 +52,6 @@
 
       <div class="dashboard-grid">
         
-        <!-- Left Column: Navigation Sidebar Mapping -->
         <div class="card flex-menu">
           <h3>Tournament Categories</h3>
           <div class="category-group">
@@ -69,7 +66,6 @@
           </div>
         </div>
 
-        <!-- Middle Column: Dynamic History Display Panel -->
         <div class="card middle-content-panel">
           <div id="dynamic-display-panel">
             <h3>Select a category to view history records</h3>
@@ -78,7 +74,6 @@
 
           <hr class="section-divider">
 
-          <!-- Fixed Gimmicks Records Section -->
           <div class="gimmicks-section">
             <h3>PES MATCHES Gimmicks</h3>
             <div class="gimmick-grid">
@@ -98,36 +93,35 @@
           </div>
         </div>
 
-        <!-- Right Column: Enhanced Dual-Mode Prize Budget Calculator -->
         <div class="card calculator-panel">
           <h3>Prize Calculator</h3>
           
-          <!-- Mode Navigation Tabs -->
-          <div class="calc-tabs">
-            <button id="tab-standard" class="tab-btn active" onclick="switchCalcMode('standard')">Standard (12%)</button>
-            <button id="tab-solo" class="tab-btn" onclick="switchCalcMode('solo')">Solo Winner (11%)</button>
+          <div class="form-group">
+            <label for="calc-payout-type">Tournament Format / Payouts</label>
+            <select id="calc-payout-type" class="custom-select" onchange="handleLayoutSwitch()">
+              <option value="solo">Solo Winner (1 Player Paid)</option>
+              <option value="top2" selected>Top 2 Split (Winner & Runner Up)</option>
+              <option value="top4">Top 4 Bracket (Semifinalists Paid)</option>
+            </select>
           </div>
-          
-          <p id="calc-instructions" class="subtitle">Enter total collected entry fees to evaluate the prize pool breakdown with a 12% tournament cut.</p>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label>Tournament Fee Charge Rate</label>
+            <div class="calc-tabs">
+              <button id="rate-12" class="tab-btn active" onclick="switchRateCharge(12)">12% Cut</button>
+              <button id="rate-11" class="tab-btn" onclick="switchRateCharge(11)">11% Cut</button>
+            </div>
+          </div>
           
           <div class="form-group">
             <label for="calc-total-pool">Total Pool Collection (NPR / Rs.)</label>
-            <input type="number" id="calc-total-pool" min="0" placeholder="e.g., 1200" oninput="calculatePrizes()">
+            <input type="number" id="calc-total-pool" min="0" placeholder="e.g., 2400" oninput="calculatePrizes()">
           </div>
 
-          <!-- Ratios Group - Dynamically Hidden in Solo Mode -->
-          <div id="calc-ratio-wrapper" class="split-ratio-row">
-            <div class="form-group">
-              <label for="calc-winner-ratio">Winner Split (%)</label>
-              <input type="number" id="calc-winner-ratio" min="0" max="100" value="70" oninput="calculatePrizes()">
+          <div id="dynamic-ratio-wrapper" class="ratio-inputs-grid">
             </div>
-            <div class="form-group">
-              <label for="calc-runner-ratio">Runner Up Split (%)</label>
-              <input type="number" id="calc-runner-ratio" min="0" max="100" value="30" oninput="calculatePrizes()">
-            </div>
-          </div>
           
-          <div id="calc-ratio-warning" class="ratio-warning hidden">⚠️ Winner + Runner Up splits must equal 100%!</div>
+          <div id="calc-ratio-warning" class="ratio-warning hidden">⚠️ Total percentages must add up to exactly 100%!</div>
 
           <div class="calc-results-container">
             <div class="calc-result-row management-cut">
@@ -138,22 +132,31 @@
               <span>Net Playable Prize Pool</span>
               <strong id="res-net-pool">Rs. 0.00</strong>
             </div>
+            
             <hr class="calc-divider">
-            <div class="calc-result-row prize-winner">
-              <span>Winner Reward</span>
-              <strong id="res-winner-prize">Rs. 0.00</strong>
+            
+            <div id="row-p1" class="calc-result-row prize-winner">
+              <span id="lbl-p1">1st Place Reward</span>
+              <strong id="res-p1">Rs. 0.00</strong>
             </div>
-            <div id="row-runner-container" class="calc-result-row prize-runner">
-              <span>Runner Up Reward</span>
-              <strong id="res-runner-prize">Rs. 0.00</strong>
+            <div id="row-p2" class="calc-result-row prize-runner">
+              <span id="lbl-p2">2nd Place Reward</span>
+              <strong id="res-p2">Rs. 0.00</strong>
+            </div>
+            <div id="row-p3" class="calc-result-row prize-third">
+              <span>3rd Place Reward</span>
+              <strong id="res-p3">Rs. 0.00</strong>
+            </div>
+            <div id="row-p4" class="calc-result-row prize-fourth">
+              <span>4th Place Reward</span>
+              <strong id="res-p4">Rs. 0.00</strong>
             </div>
           </div>
 
-          <!-- 10/10 Copy Quick Button Tool -->
-          <button id="copy-summary-btn" class="btn btn-secondary" style="width: 100%; margin-top: 1rem; font-size: 0.85rem;" onclick="copyCalcSummary()">
-            📋 Copy Format for Community
+          <button id="copy-summary-btn" class="btn btn-secondary text-copy-btn" onclick="copyCalcSummary()">
+            📝 Copy Format for Community
           </button>
-          <div id="copy-toast" class="toast-msg hidden">Copied text format cleanly!</div>
+          <div id="copy-toast" class="toast-msg hidden">Copied layout format to clipboard!</div>
         </div>
 
       </div>
