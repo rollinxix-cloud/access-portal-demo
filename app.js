@@ -46,7 +46,9 @@ const HISTORICAL_DATA_STORE = {
   ultimate_player: {
     title: "ULTIMATE PLAYER BRACKET RECORDS",
     description: "Knockout classification records tracking the absolute peak bracket challengers.",
-    headers: ["Season", "Season 11", winner: "PesNepal-Naughty08 (Manees)" },
+    headers: ["Season", "Champion Team / Player"],
+    records: [
+      { season: "Season 11", winner: "PesNepal-Naughty08 (Manees)" },
       { season: "Season 10", winner: "Avengers SCO (Sagar)" },
       { season: "Season 9", winner: "LYTHX_11 (Manjil)" },
       { season: "Season 8", winner: "Cold Palmer (Hrijwan)" },
@@ -62,7 +64,7 @@ const HISTORICAL_DATA_STORE = {
 };
 
 let activeSessionUser = null;
-let currentTaxRate = 12; // Tracks fee toggle rate percentage (12 or 11)
+let currentTaxRate = 12;
 
 const elements = {
   htmlNode: document.documentElement,
@@ -78,14 +80,12 @@ const elements = {
   themeIcon: document.getElementById("theme-icon"),
   logoutButtons: document.querySelectorAll(".logout-btn"),
   
-  // Calculator Core Node Configuration
   calcPayoutType: document.getElementById("calc-payout-type"),
   calcTotalPool: document.getElementById("calc-total-pool"),
   dynamicRatioWrapper: document.getElementById("dynamic-ratio-wrapper"),
   calcRatioWarning: document.getElementById("calc-ratio-warning"),
   labelChargeCut: document.getElementById("label-charge-cut"),
   
-  // Output Row Elements
   resAdminCut: document.getElementById("res-admin-cut"),
   resNetPool: document.getElementById("res-net-pool"),
   rowP1: document.getElementById("row-p1"),
@@ -139,7 +139,7 @@ function toggleInterfaceView(targetView) {
 function showDashboard() {
   elements.adminWelcome.innerText = `Logged in securely as: ${activeSessionUser.username}`;
   toggleInterfaceView("dashboard");
-  handleLayoutSwitch(); // Renders default dynamic fields
+  handleLayoutSwitch();
 }
 
 elements.loginForm.addEventListener("submit", function(e) {
@@ -196,7 +196,6 @@ window.showHistory = function(categoryKey) {
   elements.dynamicDisplay.appendChild(layoutContainer);
 };
 
-// HANDLES RATE TAB CHANGES (11% OR 12%)
 window.switchRateCharge = function(rate) {
   currentTaxRate = rate;
   document.getElementById("rate-12").classList.remove("active");
@@ -206,7 +205,6 @@ window.switchRateCharge = function(rate) {
   calculatePrizes();
 };
 
-// HANDLES DROPDOWN TYPE SWITCHING AND GENERATES INPUT FIELDS DYNAMICALLY
 window.handleLayoutSwitch = function() {
   const mode = elements.calcPayoutType.value;
   elements.dynamicRatioWrapper.innerHTML = "";
@@ -229,7 +227,6 @@ window.handleLayoutSwitch = function() {
   calculatePrizes();
 };
 
-// CORE CALCULATION CALENDAR ENGINE
 window.calculatePrizes = function() {
   const totalPool = parseFloat(elements.calcTotalPool.value) || 0;
   const mode = elements.calcPayoutType.value;
@@ -240,7 +237,6 @@ window.calculatePrizes = function() {
   elements.resAdminCut.innerText = `Rs. ${adminCut.toFixed(2)}`;
   elements.resNetPool.innerText = `Rs. ${netPrizePool.toFixed(2)}`;
 
-  // Clear visibility states on output rows
   elements.rowP1.classList.add("hidden");
   elements.rowP2.classList.add("hidden");
   elements.rowP3.classList.add("hidden");
@@ -288,7 +284,6 @@ window.calculatePrizes = function() {
   }
 };
 
-// AUTO-FORMATTED COPY FOR COMMUNITY POSTS
 window.copyCalcSummary = function() {
   const total = parseFloat(elements.calcTotalPool.value) || 0;
   if (total === 0) return;
