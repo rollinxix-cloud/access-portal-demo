@@ -1,10 +1,12 @@
 "use strict";
 
+// Admin Authentication Setup
 const ADMIN_CREDENTIALS = {
   username: "adminjon",
   password: "JonAdmin123"
 };
 
+// Tournament History Records Data Store
 const HISTORICAL_DATA_STORE = {
   elite_league: {
     title: "ELITE LEAGUE HALL OF FAME",
@@ -24,6 +26,7 @@ const HISTORICAL_DATA_STORE = {
     description: "Divisional developmental tiers and qualification tournament histories.",
     headers: ["Season", "Champion Team / Player"],
     records: [
+      { season: "Season 6", winner: "PNE_SLAYERx7 ( Prabesh )" },
       { season: "Season 5", winner: "PesNepal•Leo (Subash)" },
       { season: "Season 4", winner: "Pasa FC (Manjil)" },
       { season: "Season 3", winner: "Meher Sharma" },
