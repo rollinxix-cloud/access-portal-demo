@@ -39,6 +39,7 @@ const HISTORICAL_DATA_STORE = {
     description: "Official chronicles and placement rankings for the PES League training grounds.",
     headers: ["Season", "Champion Team / Player"],
     records: [
+      { season: "Season 6", winner: "PNE_SIV (Siv)" },
       { season: "Season 5", winner: "Blue Lock XI (Ashman)" },
       { season: "Season 4", winner: "AC Milan (Prateek)" },
       { season: "Season 3", winner: "Brazil (Sagar)" },
