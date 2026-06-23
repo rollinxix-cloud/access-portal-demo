@@ -52,6 +52,7 @@ const HISTORICAL_DATA_STORE = {
     description: "Knockout classification records tracking the absolute peak bracket challengers.",
     headers: ["Season", "Champion Team / Player"],
     records: [
+      { season: "Season 12", winner: "Nepolian Habilww (Hab II)" },
       { season: "Season 11", winner: "PesNepal-Naughty08 (Manees)" },
       { season: "Season 10", winner: "Avengers SCO (Sagar)" },
       { season: "Season 9", winner: "LYTHX_11 (Manjil)" },
