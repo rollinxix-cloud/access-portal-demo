@@ -52,28 +52,45 @@ def update_winner():
     with open(file_path, "r", encoding="utf-8") as file:
         content = file.read()
 
-    # Regex pattern to locate the start of the records array for the targeted tournament section
-    pattern = rf"({target_key}:\s*\{{[^}}]*\brecords:\s*\[)"
-    match = re.search(pattern, content)
+    # Isolate the specific tournament data block to prevent accidental matches elsewhere
+    block_pattern = rf"({target_key}:\s*\{{[^}}]*\brecords:\s*\[)([^\]]*?)(\s*\])"
+    block_match = re.search(block_pattern, content)
 
-    if not match:
+    if not block_match:
         print(f"❌ Error: Failed to find the data list for '{target_key}' in your app.js layout.")
         return
 
-    # Format the new JavaScript record entry line elegantly
-    new_entry = f'\n      {{ season: "{season_text}", winner: "{winner_name}" }},'
+    full_block = block_match.group(0)
+    prefix = block_match.group(1)
+    records_content = block_match.group(2)
+    suffix = block_match.group(3)
 
-    # Inject the new entry right after the 'records: [' array opening brackets tag
-    updated_content = content[:match.end()] + new_entry + content[match.end():]
+    # Search for an existing entry matching the season name inside this block
+    season_line_pattern = rf'{{\s*season:\s*"{season_text}"\s*,\s*winner:\s*"[^"]*"\s*}},?'
+    
+    if re.search(season_line_pattern, records_content):
+        # REPLACE existing old entry
+        print(f"🔄 Found an existing record for {season_text} under {target_key}. Swapping winner name...")
+        new_line = f'{{ season: "{season_text}", winner: "{winner_name}" }},'
+        updated_records = re.sub(season_line_pattern, new_line, records_content)
+        updated_block = prefix + updated_records + suffix
+        updated_content = content.replace(full_block, updated_block)
+        action_text = "replaced"
+    else:
+        # INSERT new entry at the top of the array
+        print(f"✨ No existing record found for {season_text}. Inserting new entry at the top...")
+        new_entry = f'\n      {{ season: "{season_text}", winner: "{winner_name}" }},'
+        updated_content = content[:block_match.end(1)] + new_entry + content[block_match.end(1):]
+        action_text = "added"
 
-    # Save the updated layout back into app.js
+    # Save the cleaned updates back into app.js safely
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(updated_content)
 
-    print(f"✨ Local update successful: Added {season_text} winner '{winner_name}' to {target_key}!")
+    print(f"✨ Local update successful: Successfully {action_text} {season_text} winner with '{winner_name}'!")
     
     # Automatically execute Git deployment pipeline 
-    commit_msg = f"data: update {tourney_input} season {season_num} record via command engine"
+    commit_msg = f"data: {action_text} {tourney_input} season {season_num} record via engine"
     run_git_commands(commit_msg)
 
 if __name__ == "__main__":
