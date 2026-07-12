@@ -29,7 +29,7 @@ const HISTORICAL_DATA_STORE = {
       { season: "Season 7", winner: "LYTHX_ 11 (Manjil)" },
       { season: "Season 6", winner: "PNE_SLAYERx7 ( Prabesh )" },
       { season: "Season 5", winner: "PesNepal•Leo (Subash)" },
-      { season: "Season 4", winner: "Pasa FC (Manjil)" },
+      { season: "Season 4", winner: "LYTHX_ 11 (Manjil)" },
       { season: "Season 3", winner: "Meher Sharma" },
       { season: "Season 2", winner: "Sagar" },
       { season: "Season 1", winner: "Bhaktapur Futsal" }
