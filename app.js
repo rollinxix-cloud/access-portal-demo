@@ -13,7 +13,7 @@ const HISTORICAL_DATA_STORE = {
     description: "Historical tracking for top-tier premier league campaigns. AC Milan (Prateek) holds the record for most titles.",
     headers: ["Season", "Champion Team / Player"],
     records: [
-      { season: "Season 7", winner: "PNE.Bomjan23 (Subash)" },
+      { season: "Season 7", winner: "PNE.Bomjan23 ( Subash )" },
       { season: "Season 6", winner: "Lythx_11 (Manjil)" },
       { season: "Season 5", winner: "AC Milan (Prateek)" },
       { season: "Season 4", winner: "The Destroyer (Kiran)" },
