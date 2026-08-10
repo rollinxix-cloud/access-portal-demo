@@ -54,6 +54,7 @@ const HISTORICAL_DATA_STORE = {
     description: "Knockout classification records tracking the absolute peak bracket challengers.",
     headers: ["Season", "Champion Team / Player"],
     records: [
+      { season: "Season 14", winner: "Basanta (बसन्त)" },
       { season: "Season 13", winner: "Pardeshi_Sakar (Sakar)" },
       { season: "Season 12", winner: "Nepolian Habilww (Hab II)" },
       { season: "Season 11", winner: "PesNepal-Naughty08 (Manees)" },
