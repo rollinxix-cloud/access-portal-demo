@@ -55,6 +55,7 @@ const HISTORICAL_DATA_STORE = {
     description: "Knockout classification records tracking the absolute peak bracket challengers.",
     headers: ["Season", "Champion Team / Player"],
     records: [
+      { season: "Season 15", winner: "NOT_ASLAM1zz (Amir)" },
       { season: "Season 14", winner: "Basanta (बसन्त)" },
       { season: "Season 13", winner: "Pardeshi_Sakar (Sakar)" },
       { season: "Season 12", winner: "Nepolian Habilww (Hab II)" },
