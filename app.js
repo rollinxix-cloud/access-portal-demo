@@ -41,6 +41,7 @@ const HISTORICAL_DATA_STORE = {
     description: "Official chronicles and placement rankings for the PES League training grounds.",
     headers: ["Season", "Champion Team / Player"],
     records: [
+      { season: "Season 7", winner: "PNE.Bomjan23 (Subash)" },
       { season: "Season 6", winner: "PNE_SIV (Siv)" },
       { season: "Season 5", winner: "Blue Lock XI (Ashman)" },
       { season: "Season 4", winner: "AC Milan (Prateek)" },
