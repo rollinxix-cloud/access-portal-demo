@@ -91,18 +91,10 @@
               </div>
             </div>
           </div>
-
-          <hr class="section-divider">
-
-          <div class="milestones-section">
-            <h3>Community Milestones & Records</h3>
-            <p class="subtitle">Historic community achievements, streak records, and defensive feats.</p>
-            <div id="milestones-container" class="milestones-grid"></div>
-          </div>
         </div>
 
         <div class="card calculator-panel">
-          <h3>Prize & Commission Calculator</h3>
+          <h3>Prize Calculator</h3>
           
           <div class="form-group">
             <label for="calc-payout-type">Tournament Format / Payouts</label>
@@ -113,17 +105,11 @@
             </select>
           </div>
 
-          <div class="form-group">
-            <label>Tournament Charge Rate (%)</label>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label>Tournament Fee Charge Rate</label>
             <div class="calc-tabs">
-              <button id="rate-preset-5" class="tab-btn" onclick="switchRateCharge(5)">5%</button>
-              <button id="rate-preset-8" class="tab-btn" onclick="switchRateCharge(8)">8%</button>
-              <button id="rate-preset-10" class="tab-btn" onclick="switchRateCharge(10)">10%</button>
-              <button id="rate-preset-11" class="tab-btn" onclick="switchRateCharge(11)">11%</button>
-              <button id="rate-preset-12" class="tab-btn active" onclick="switchRateCharge(12)">12%</button>
-            </div>
-            <div class="custom-rate-wrapper">
-              <input type="number" id="calc-custom-rate" step="0.1" min="0" max="100" placeholder="Custom % (e.g. 7.5)" oninput="handleCustomRateInput()">
+              <button id="rate-12" class="tab-btn active" onclick="switchRateCharge(12)">12% Cut</button>
+              <button id="rate-11" class="tab-btn" onclick="switchRateCharge(11)">11% Cut</button>
             </div>
           </div>
           
@@ -132,7 +118,8 @@
             <input type="number" id="calc-total-pool" min="0" placeholder="e.g., 2400" oninput="calculatePrizes()">
           </div>
 
-          <div id="dynamic-ratio-wrapper" class="ratio-inputs-grid"></div>
+          <div id="dynamic-ratio-wrapper" class="ratio-inputs-grid">
+            </div>
           
           <div id="calc-ratio-warning" class="ratio-warning hidden">⚠️ Total percentages must add up to exactly 100%!</div>
 

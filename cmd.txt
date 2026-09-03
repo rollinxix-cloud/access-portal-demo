@@ -1,0 +1,7 @@
+python update_winner.py league 7 "SomeWinner (John)"
+
+python update_winner.py camp 6 "CampHero (Sam)"
+
+python update_winner.py division 7 "AnotherChampion (Alex)"
+
+python update_winner.py ultimate 12 "PeakStriker (Dave)"

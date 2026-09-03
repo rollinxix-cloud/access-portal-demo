@@ -6,40 +6,6 @@ const ADMIN_CREDENTIALS = {
   password: "JonAdmin123"
 };
 
-// Community Milestones & Historic Memory Data Store
-const MILESTONES_DATA = [
-  {
-    title: "Most Goals in a Season",
-    value: "34 Goals",
-    recordHolder: "PNE_SLAYERx7 (Prabesh)",
-    context: "Elite Division Season 6"
-  },
-  {
-    title: "Iron Defense (Fewest Conceded)",
-    value: "3 Goals",
-    recordHolder: "LYTHX_ 11 (Manjil)",
-    context: "Elite Division Season 7"
-  },
-  {
-    title: "Longest Undefeated Streak",
-    value: "14 Matches",
-    recordHolder: "AC Milan (Prateek)",
-    context: "Elite League Season 3-5"
-  },
-  {
-    title: "Biggest Grand Final Margin",
-    value: "5 - 0 Victory",
-    recordHolder: "PesNepal•Leo (Subash)",
-    context: "Elite Division Season 5"
-  },
-  {
-    title: "Most Knockout Titles",
-    value: "3 Championships",
-    recordHolder: "Black Hornet (Dipendra)",
-    context: "Ultimate Player Season 1-3"
-  }
-];
-
 // Tournament History Records Data Store
 const HISTORICAL_DATA_STORE = {
   elite_league: {
@@ -126,10 +92,8 @@ const elements = {
   themeIcon: document.getElementById("theme-icon"),
   logoutButtons: document.querySelectorAll(".logout-btn"),
   
-  milestonesContainer: document.getElementById("milestones-container"),
   calcPayoutType: document.getElementById("calc-payout-type"),
   calcTotalPool: document.getElementById("calc-total-pool"),
-  calcCustomRate: document.getElementById("calc-custom-rate"),
   dynamicRatioWrapper: document.getElementById("dynamic-ratio-wrapper"),
   calcRatioWarning: document.getElementById("calc-ratio-warning"),
   labelChargeCut: document.getElementById("label-charge-cut"),
@@ -167,18 +131,6 @@ function updateThemeButtonUI(theme) {
   elements.themeIcon.innerText = theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
 }
 
-function renderMilestones() {
-  if (!elements.milestonesContainer) return;
-  elements.milestonesContainer.innerHTML = MILESTONES_DATA.map(item => `
-    <div class="milestone-box">
-      <span class="milestone-title">${escapeHtml(item.title)}</span>
-      <strong class="milestone-val">${escapeHtml(item.value)}</strong>
-      <div class="milestone-holder">${escapeHtml(item.recordHolder)}</div>
-      <div class="milestone-ctx">${escapeHtml(item.context)}</div>
-    </div>
-  `).join('');
-}
-
 function verifyActiveSession() {
   const preservedToken = sessionStorage.getItem("active_archive_session");
   if (preservedToken) {
@@ -199,7 +151,6 @@ function toggleInterfaceView(targetView) {
 function showDashboard() {
   elements.adminWelcome.innerText = `Logged in securely as: ${activeSessionUser.username}`;
   toggleInterfaceView("dashboard");
-  renderMilestones();
   handleLayoutSwitch();
 }
 
@@ -259,35 +210,10 @@ window.showHistory = function(categoryKey) {
 
 window.switchRateCharge = function(rate) {
   currentTaxRate = rate;
-  if (elements.calcCustomRate) elements.calcCustomRate.value = "";
-  
-  [5, 8, 10, 11, 12].forEach(p => {
-    const btn = document.getElementById(`rate-preset-${p}`);
-    if (btn) btn.classList.remove("active");
-  });
-
-  const activeBtn = document.getElementById(`rate-preset-${rate}`);
-  if (activeBtn) activeBtn.classList.add("active");
-
-  elements.labelChargeCut.innerText = `Tournament Charge (${currentTaxRate}%)`;
-  calculatePrizes();
-};
-
-window.handleCustomRateInput = function() {
-  const val = parseFloat(elements.calcCustomRate.value);
-  
-  [5, 8, 10, 11, 12].forEach(p => {
-    const btn = document.getElementById(`rate-preset-${p}`);
-    if (btn) btn.classList.remove("active");
-  });
-
-  if (!isNaN(val) && val >= 0) {
-    currentTaxRate = val;
-    elements.labelChargeCut.innerText = `Tournament Charge (${currentTaxRate}%)`;
-  } else {
-    currentTaxRate = 0;
-    elements.labelChargeCut.innerText = `Tournament Charge (0%)`;
-  }
+  document.getElementById("rate-12").classList.remove("active");
+  document.getElementById("rate-11").classList.remove("active");
+  document.getElementById(`rate-${rate}`).classList.add("active");
+  elements.labelChargeCut.innerText = `Tournament Charge (${rate}%)`;
   calculatePrizes();
 };
 

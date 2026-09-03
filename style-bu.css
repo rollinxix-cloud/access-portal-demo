@@ -120,34 +120,10 @@ input:focus, .custom-select:focus { outline: none; border-color: var(--accent); 
 .gimmick-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
 .gimmick-name { font-size: 1.1rem; }
 
-/* Milestones Grid */
-.milestones-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1rem; }
-@media (min-width: 576px) { .milestones-grid { grid-template-columns: repeat(2, 1fr); } }
-
-.milestone-box {
-  background-color: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-left: 4px solid var(--accent);
-  border-radius: 8px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-.milestone-box:hover { transform: translateY(-2px); border-color: var(--accent); }
-.milestone-title { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
-.milestone-val { font-size: 1.2rem; color: var(--success); font-weight: 700; }
-.milestone-holder { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
-.milestone-ctx { font-size: 0.8rem; color: var(--text-muted); }
-
-/* Upgraded Tab & Custom Percentage Inputs */
-.calc-tabs { display: flex; background-color: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 4px; gap: 4px; margin-bottom: 0.5rem; flex-wrap: wrap; }
-.tab-btn { flex: 1; min-width: 45px; padding: 0.5rem 0.25rem; font-size: 0.8rem; border-radius: 4px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
+/* Tab Modules */
+.calc-tabs { display: flex; background-color: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 6px; padding: 4px; gap: 4px; }
+.tab-btn { flex: 1; padding: 0.5rem; font-size: 0.85rem; border-radius: 4px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
 .tab-btn.active { background-color: var(--accent); color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-.custom-rate-wrapper { margin-top: 0.5rem; }
-.custom-rate-wrapper input { padding: 0.5rem 0.75rem; font-size: 0.9rem; }
-
 .toast-msg { text-align: center; font-size: 0.8rem; color: var(--success); background-color: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); padding: 0.5rem; border-radius: 4px; margin-top: 0.5rem; }
 
 /* Dynamic Form Input Split Grid Configuration */
