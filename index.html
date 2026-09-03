@@ -8,14 +8,13 @@
 </head>
 <body>
   <div id="app">
-    <!-- AUTHENTICATION VIEW -->
     <section id="login-view" class="view-panel">
       <div class="card auth-card">
         <div class="brand-header-center">
           <img src="https://graph.facebook.com/groups/pesmatches/picture?type=large" alt="PES MATCHES Logo" class="brand-logo-img">
           <h2>PES MATCHES Login</h2>
         </div>
-        <p class="subtitle">Enter your admin credentials to manage tournaments</p>
+        <p class="subtitle">Enter your community credentials to proceed</p>
         
         <form id="login-form">
           <div class="form-group">
@@ -32,7 +31,6 @@
       </div>
     </section>
 
-    <!-- MAIN DASHBOARD VIEW -->
     <section id="admin-view" class="view-panel hidden">
       <header class="dashboard-header">
         <div class="header-brand-container">
@@ -45,9 +43,6 @@
           </div>
         </div>
         <div class="header-actions">
-          <button id="download-bat-btn" class="btn btn-secondary git-btn" onclick="downloadPushBat()" title="Download push.bat to quickly push changes to GitHub">
-            🚀 Download push.bat
-          </button>
           <button id="theme-toggle-btn" class="btn btn-secondary theme-btn" aria-label="Toggle light and dark themes">
             <span id="theme-icon">☀️ Light Mode</span>
           </button>
@@ -57,74 +52,28 @@
 
       <div class="dashboard-grid">
         
-        <!-- MAIN CONTENT PANEL: HISTORY MANAGER & HALL OF FAME -->
+        <div class="card flex-menu">
+          <h3>Tournament Categories</h3>
+          <div class="category-group">
+            <h4>League Tournament</h4>
+            <button class="menu-item-btn" onclick="showHistory('elite_league')">ELITE LEAGUE</button>
+            <button class="menu-item-btn" onclick="showHistory('elite_division')">ELITE DIVISION LEAGUE</button>
+            <button class="menu-item-btn" onclick="showHistory('pes_camp')">PES LEAGUE CAMP</button>
+          </div>
+          <div class="category-group">
+            <h4>Knockout Tournament</h4>
+            <button class="menu-item-btn" onclick="showHistory('ultimate_player')">ULTIMATE PLAYER</button>
+          </div>
+        </div>
+
         <div class="card middle-content-panel">
-          <h3>🏆 Tournament History Manager</h3>
-          <p class="subtitle">Select a competition room below to view, add, edit, or delete hall of fame records.</p>
-
-          <!-- 4 Competition Rooms Navigation Tabs -->
-          <div class="room-tabs">
-            <button class="room-tab-btn active" onclick="switchHistoryRoom('elite_league')">Elite League</button>
-            <button class="room-tab-btn" onclick="switchHistoryRoom('elite_division')">eLite Division League</button>
-            <button class="room-tab-btn" onclick="switchHistoryRoom('pes_camp')">PES LEAGUE CAMP</button>
-            <button class="room-tab-btn" onclick="switchHistoryRoom('ultimate_player')">Ultimate Player</button>
-          </div>
-
-          <!-- History Entry / Edit Form -->
-          <form id="history-entry-form" class="history-form" onsubmit="handleSaveRecord(event)">
-            <input type="hidden" id="edit-record-index" value="-1">
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label for="hist-season">Season / Edition</label>
-                <input type="text" id="hist-season" placeholder="e.g., Season 8" required>
-              </div>
-              <div class="form-group">
-                <label for="hist-winner">Champion / Winner Name</label>
-                <input type="text" id="hist-winner" placeholder="e.g., AC Milan (Prateek)" required>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="hist-details">Extra Details / Highlights (Optional)</label>
-              <input type="text" id="hist-details" placeholder="e.g., Won 3-1 in Grand Final / 14 Matches Undefeated">
-            </div>
-
-            <div class="form-actions-inline">
-              <button type="submit" id="hist-submit-btn" class="btn btn-primary">➕ Add History Record</button>
-              <button type="button" id="hist-cancel-btn" class="btn btn-secondary hidden" onclick="resetHistoryForm()">Cancel Edit</button>
-            </div>
-          </form>
-
-          <hr class="section-divider">
-
-          <!-- Active Room Records Table -->
-          <div class="room-records-container">
-            <div class="room-header-flex">
-              <h4 id="active-room-title">ELITE LEAGUE RECORDS</h4>
-              <button class="btn btn-secondary btn-sm" onclick="exportHistoryData()" title="Copy current backup JSON snapshot">📋 Export JSON</button>
-            </div>
-
-            <div class="table-responsive">
-              <table class="history-table">
-                <thead>
-                  <tr>
-                    <th>Season</th>
-                    <th>Winner / Champion</th>
-                    <th>Notes / Highlights</th>
-                    <th style="text-align: right;">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="history-table-body">
-                  <!-- Dynamically populated via app.js -->
-                </tbody>
-              </table>
-            </div>
+          <div id="dynamic-display-panel">
+            <h3>Select a category to view history records</h3>
+            <p class="subtitle">Click any tournament tier on the left to pull historical server statistics.</p>
           </div>
 
           <hr class="section-divider">
 
-          <!-- Gimmicks Section -->
           <div class="gimmicks-section">
             <h3>PES MATCHES Gimmicks</h3>
             <div class="gimmick-grid">
@@ -142,20 +91,10 @@
               </div>
             </div>
           </div>
-
-          <hr class="section-divider">
-
-          <!-- Milestones Section -->
-          <div class="milestones-section">
-            <h3>Community Milestones & Records</h3>
-            <p class="subtitle">Historic community achievements, streak records, and defensive feats.</p>
-            <div id="milestones-container" class="milestones-grid"></div>
-          </div>
         </div>
 
-        <!-- SIDEBAR CALCULATOR PANEL -->
         <div class="card calculator-panel">
-          <h3>Prize & Commission Calculator</h3>
+          <h3>Prize Calculator</h3>
           
           <div class="form-group">
             <label for="calc-payout-type">Tournament Format / Payouts</label>
@@ -166,17 +105,11 @@
             </select>
           </div>
 
-          <div class="form-group">
-            <label>Tournament Charge Rate (%)</label>
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label>Tournament Fee Charge Rate</label>
             <div class="calc-tabs">
-              <button id="rate-preset-5" class="tab-btn" onclick="switchRateCharge(5)">5%</button>
-              <button id="rate-preset-8" class="tab-btn" onclick="switchRateCharge(8)">8%</button>
-              <button id="rate-preset-10" class="tab-btn" onclick="switchRateCharge(10)">10%</button>
-              <button id="rate-preset-11" class="tab-btn" onclick="switchRateCharge(11)">11%</button>
-              <button id="rate-preset-12" class="tab-btn active" onclick="switchRateCharge(12)">12%</button>
-            </div>
-            <div class="custom-rate-wrapper">
-              <input type="number" id="calc-custom-rate" step="0.1" min="0" max="100" placeholder="Custom % (e.g. 7.5)" oninput="handleCustomRateInput()">
+              <button id="rate-12" class="tab-btn active" onclick="switchRateCharge(12)">12% Cut</button>
+              <button id="rate-11" class="tab-btn" onclick="switchRateCharge(11)">11% Cut</button>
             </div>
           </div>
           
@@ -185,7 +118,8 @@
             <input type="number" id="calc-total-pool" min="0" placeholder="e.g., 2400" oninput="calculatePrizes()">
           </div>
 
-          <div id="dynamic-ratio-wrapper" class="ratio-inputs-grid"></div>
+          <div id="dynamic-ratio-wrapper" class="ratio-inputs-grid">
+            </div>
           
           <div id="calc-ratio-warning" class="ratio-warning hidden">⚠️ Total percentages must add up to exactly 100%!</div>
 
