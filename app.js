@@ -27,6 +27,7 @@ const HISTORICAL_DATA_STORE = {
     description: "Divisional developmental tiers and qualification tournament histories.",
     headers: ["Season", "Champion Team / Player"],
     records: [
+      { season: "Season 8", winner: "PNE.Bomjan23 (Subash)" },
       { season: "Season 7", winner: "LYTHX_ 11 (Manjil)" },
       { season: "Season 6", winner: "PNE_SLAYERx7 ( Prabesh )" },
       { season: "Season 5", winner: "PesNepal•Leo (Subash)" },
