@@ -1,117 +1,66 @@
 "use strict";
 
-// Admin Authentication Setup
+// Admin Credentials
 const ADMIN_CREDENTIALS = {
   username: "adminjon",
   password: "JonAdmin123"
 };
 
-// Community Milestones & Historic Memory Data Store
-const MILESTONES_DATA = [
-  {
-    title: "Most Goals in a Season",
-    value: "34 Goals",
-    recordHolder: "PNE_SLAYERx7 (Prabesh)",
-    context: "Elite Division Season 6"
-  },
-  {
-    title: "Iron Defense (Fewest Conceded)",
-    value: "3 Goals",
-    recordHolder: "LYTHX_ 11 (Manjil)",
-    context: "Elite Division Season 7"
-  },
-  {
-    title: "Longest Undefeated Streak",
-    value: "14 Matches",
-    recordHolder: "AC Milan (Prateek)",
-    context: "Elite League Season 3-5"
-  },
-  {
-    title: "Biggest Grand Final Margin",
-    value: "5 - 0 Victory",
-    recordHolder: "PesNepal•Leo (Subash)",
-    context: "Elite Division Season 5"
-  },
-  {
-    title: "Most Knockout Titles",
-    value: "3 Championships",
-    recordHolder: "Black Hornet (Dipendra)",
-    context: "Ultimate Player Season 1-3"
-  }
-];
+// Storage Key for Local History Persistence
+const STORAGE_KEY = "pes_matches_custom_history";
 
-// Tournament History Records Data Store
-const HISTORICAL_DATA_STORE = {
-  elite_league: {
-    title: "ELITE LEAGUE HALL OF FAME",
-    description: "Historical tracking for top-tier premier league campaigns. AC Milan (Prateek) holds the record for most titles.",
-    headers: ["Season", "Champion Team / Player"],
-    records: [
-      { season: "Season 7", winner: "PNE.Bomjan23 ( Subash )" },
-      { season: "Season 6", winner: "Lythx_11 (Manjil)" },
-      { season: "Season 5", winner: "AC Milan (Prateek)" },
-      { season: "Season 4", winner: "The Destroyer (Kiran)" },
-      { season: "Season 3", winner: "AC Milan (Prateek)" },
-      { season: "Season 2", winner: "AC Milan (Prateek)" },
-      { season: "Season 1", winner: "AC Milan (Prateek)" }
-    ]
-  },
-  elite_division: {
-    title: "ELITE DIVISION LEAGUE RECORDS",
-    description: "Divisional developmental tiers and qualification tournament histories.",
-    headers: ["Season", "Champion Team / Player"],
-    records: [
-      { season: "Season 8", winner: "PNE.Bomjan23 (Subash)" },
-      { season: "Season 7", winner: "LYTHX_ 11 (Manjil)" },
-      { season: "Season 6", winner: "PNE_SLAYERx7 ( Prabesh )" },
-      { season: "Season 5", winner: "PesNepal•Leo (Subash)" },
-      { season: "Season 4", winner: "LYTHX_ 11 (Manjil)" },
-      { season: "Season 3", winner: "Meher Sharma" },
-      { season: "Season 2", winner: "Sagar" },
-      { season: "Season 1", winner: "Bhaktapur Futsal" }
-    ]
-  },
-  pes_camp: {
-    title: "PES LEAGUE CAMP RECORDS",
-    description: "Official chronicles and placement rankings for the PES League training grounds.",
-    headers: ["Season", "Champion Team / Player"],
-    records: [
-      { season: "Season 7", winner: "PNE.Bomjan23 (Subash)" },
-      { season: "Season 6", winner: "PNE_SIV (Siv)" },
-      { season: "Season 5", winner: "Blue Lock XI (Ashman)" },
-      { season: "Season 4", winner: "AC Milan (Prateek)" },
-      { season: "Season 3", winner: "Brazil (Sagar)" },
-      { season: "Season 2", winner: "AC Milan (Prateek)" },
-      { season: "Season 1", winner: "FC Legends (Prabin Dahal)" }
-    ]
-  },
-  ultimate_player: {
-    title: "ULTIMATE PLAYER BRACKET RECORDS",
-    description: "Knockout classification records tracking the absolute peak bracket challengers.",
-    headers: ["Season", "Champion Team / Player"],
-    records: [
-      { season: "Season 15", winner: "NOT_ASLAM1zz (Amir)" },
-      { season: "Season 14", winner: "Basanta (बसन्त)" },
-      { season: "Season 13", winner: "Pardeshi_Sakar (Sakar)" },
-      { season: "Season 12", winner: "Nepolian Habilww (Hab II)" },
-      { season: "Season 11", winner: "PesNepal-Naughty08 (Manees)" },
-      { season: "Season 10", winner: "Avengers SCO (Sagar)" },
-      { season: "Season 9", winner: "LYTHX_11 (Manjil)" },
-      { season: "Season 8", winner: "Cold Palmer (Hrijwan)" },
-      { season: "Season 7", winner: "Cold Palmer (Hrijwan)" },
-      { season: "Season 6", winner: "AC Milan (Prateek)" },
-      { season: "Season 5", winner: "The Destroyer (Kiran)" },
-      { season: "Season 4", winner: "Blue Lock XI (Ashman)" },
-      { season: "Season 3", winner: "Black Hornet (Dipendra)" },
-      { season: "Season 2", winner: "Black Hornet (Dipendra)" },
-      { season: "Season 1", winner: "Black Hornet (Dipendra)" }
-    ]
-  }
+// Active Room Tracker
+let currentActiveRoom = "elite_league";
+
+// Initial/Default Records for 4 Tournament Rooms
+const DEFAULT_HISTORY = {
+  elite_league: [
+    { season: "Season 7", winner: "PNE.Bomjan23 (Subash)", details: "Grand Final Winner" },
+    { season: "Season 6", winner: "Lythx_11 (Manjil)", details: "Clean sheet streak" },
+    { season: "Season 5", winner: "AC Milan (Prateek)", details: "Undefeated champion" },
+    { season: "Season 4", winner: "The Destroyer (Kiran)", details: "High goal ratio" },
+    { season: "Season 3", winner: "AC Milan (Prateek)", details: "Back to back title" }
+  ],
+  elite_division: [
+    { season: "Season 8", winner: "PNE.Bomjan23 (Subash)", details: "Division Champion" },
+    { season: "Season 7", winner: "LYTHX_ 11 (Manjil)", details: "Conceded only 3 goals" },
+    { season: "Season 6", winner: "PNE_SLAYERx7 (Prabesh)", details: "34 Goals scored" }
+  ],
+  pes_camp: [
+    { season: "Season 7", winner: "PNE.Bomjan23 (Subash)", details: "Camp Gold Medal" },
+    { season: "Season 6", winner: "PNE_SIV (Siv)", details: "Camp Leader" }
+  ],
+  ultimate_player: [
+    { season: "Season 15", winner: "NOT_ASLAM1zz (Amir)", details: "Knockout Champion" },
+    { season: "Season 14", winner: "Basanta (बसन्त)", details: "Tight final match" },
+    { season: "Season 13", winner: "Pardeshi_Sakar (Sakar)", details: "Penalty Shootout win" }
+  ]
 };
+
+// History Store Initialization
+let historyStore = JSON.parse(localStorage.getItem(STORAGE_KEY)) || DEFAULT_HISTORY;
+
+// Titles Map
+const ROOM_TITLES = {
+  elite_league: "ELITE LEAGUE RECORDS",
+  elite_division: "eLITE DIVISION LEAGUE RECORDS",
+  pes_camp: "PES LEAGUE CAMP RECORDS",
+  ultimate_player: "ULTIMATE PLAYER RECORDS"
+};
+
+// Community Milestones Data
+const MILESTONES_DATA = [
+  { title: "Most Goals in a Season", value: "34 Goals", recordHolder: "PNE_SLAYERx7 (Prabesh)", context: "Elite Division Season 6" },
+  { title: "Iron Defense (Fewest Conceded)", value: "3 Goals", recordHolder: "LYTHX_ 11 (Manjil)", context: "Elite Division Season 7" },
+  { title: "Longest Undefeated Streak", value: "14 Matches", recordHolder: "AC Milan (Prateek)", context: "Elite League Season 3-5" },
+  { title: "Biggest Grand Final Margin", value: "5 - 0 Victory", recordHolder: "PesNepal•Leo (Subash)", context: "Elite Division Season 5" },
+  { title: "Most Knockout Titles", value: "3 Championships", recordHolder: "Black Hornet (Dipendra)", context: "Ultimate Player Season 1-3" }
+];
 
 let activeSessionUser = null;
 let currentTaxRate = 12;
 
+// DOM Elements Container
 const elements = {
   htmlNode: document.documentElement,
   loginView: document.getElementById("login-view"),
@@ -121,7 +70,6 @@ const elements = {
   loginPasswordInput: document.getElementById("login-password"),
   loginError: document.getElementById("login-error"),
   adminWelcome: document.getElementById("admin-welcome-msg"),
-  dynamicDisplay: document.getElementById("dynamic-display-panel"),
   themeToggleBtn: document.getElementById("theme-toggle-btn"),
   themeIcon: document.getElementById("theme-icon"),
   logoutButtons: document.querySelectorAll(".logout-btn"),
@@ -149,6 +97,7 @@ const elements = {
   copyToast: document.getElementById("copy-toast")
 };
 
+// Theme Management Engine
 function initThemeEngine() {
   const savedTheme = localStorage.getItem("pes_matches_theme") || "dark";
   elements.htmlNode.setAttribute("data-theme", savedTheme);
@@ -166,6 +115,143 @@ function initThemeEngine() {
 function updateThemeButtonUI(theme) {
   elements.themeIcon.innerText = theme === "light" ? "🌙 Dark Mode" : "☀️ Light Mode";
 }
+
+// Download push.bat helper function
+window.downloadPushBat = function() {
+  const batContent = `@echo off\r\necho ===================================\r\necho   PES MATCHES - Quick GitHub Push\r\necho ===================================\r\ngit add .\r\nset /p commit_msg="Enter commit message (or press ENTER for 'Update site'): "\r\nif "%commit_msg%"=="" set commit_msg=Update site\r\ngit commit -m "%commit_msg%"\r\ngit push origin main\r\necho ===================================\r\necho   Successfully pushed to GitHub!\r\necho ===================================\r\npause\r\n`;
+  
+  const blob = new Blob([batContent], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "push.bat";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
+
+// ------------------------------------------------------------------
+// HISTORY MANAGER ROOM LOGIC (ADD, EDIT, DELETE, SWITCH)
+// ------------------------------------------------------------------
+
+window.switchHistoryRoom = function(roomKey) {
+  currentActiveRoom = roomKey;
+
+  const tabs = document.querySelectorAll(".room-tab-btn");
+  tabs.forEach(tab => tab.classList.remove("active"));
+  
+  const roomIndexMap = { elite_league: 0, elite_division: 1, pes_camp: 2, ultimate_player: 3 };
+  if (tabs[roomIndexMap[roomKey]]) {
+    tabs[roomIndexMap[roomKey]].classList.add("active");
+  }
+
+  document.getElementById("active-room-title").innerText = ROOM_TITLES[roomKey];
+  resetHistoryForm();
+  renderActiveRoomTable();
+};
+
+function renderActiveRoomTable() {
+  const tbody = document.getElementById("history-table-body");
+  const records = historyStore[currentActiveRoom] || [];
+
+  if (records.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+          No records added yet for this room. Use the form above to add an entry!
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = records.map((item, index) => `
+    <tr>
+      <td style="font-weight: 600; color: var(--accent);">${escapeHtml(item.season)}</td>
+      <td style="font-weight: 500;">${escapeHtml(item.winner)}</td>
+      <td style="color: var(--text-muted); font-size: 0.85rem;">${escapeHtml(item.details || '-')}</td>
+      <td style="text-align: right; white-space: nowrap;">
+        <button class="action-icon-btn edit-btn" onclick="triggerEditRecord(${index})" title="Edit Record">✏️</button>
+        <button class="action-icon-btn delete-btn" onclick="deleteRecord(${index})" title="Delete Record">🗑️</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+window.handleSaveRecord = function(event) {
+  event.preventDefault();
+  
+  const seasonInput = document.getElementById("hist-season").value.trim();
+  const winnerInput = document.getElementById("hist-winner").value.trim();
+  const detailsInput = document.getElementById("hist-details").value.trim();
+  const editIndex = parseInt(document.getElementById("edit-record-index").value, 10);
+
+  if (!seasonInput || !winnerInput) return;
+
+  const recordObject = {
+    season: seasonInput,
+    winner: winnerInput,
+    details: detailsInput
+  };
+
+  if (!historyStore[currentActiveRoom]) {
+    historyStore[currentActiveRoom] = [];
+  }
+
+  if (editIndex >= 0) {
+    historyStore[currentActiveRoom][editIndex] = recordObject;
+  } else {
+    historyStore[currentActiveRoom].unshift(recordObject);
+  }
+
+  saveHistoryToStorage();
+  resetHistoryForm();
+  renderActiveRoomTable();
+};
+
+window.triggerEditRecord = function(index) {
+  const record = historyStore[currentActiveRoom][index];
+  if (!record) return;
+
+  document.getElementById("hist-season").value = record.season;
+  document.getElementById("hist-winner").value = record.winner;
+  document.getElementById("hist-details").value = record.details || "";
+  document.getElementById("edit-record-index").value = index;
+
+  document.getElementById("hist-submit-btn").innerText = "💾 Save Changes";
+  document.getElementById("hist-cancel-btn").classList.remove("hidden");
+};
+
+window.deleteRecord = function(index) {
+  if (confirm("Are you sure you want to remove this history record?")) {
+    historyStore[currentActiveRoom].splice(index, 1);
+    saveHistoryToStorage();
+    renderActiveRoomTable();
+  }
+};
+
+window.resetHistoryForm = function() {
+  document.getElementById("history-entry-form").reset();
+  document.getElementById("edit-record-index").value = "-1";
+  document.getElementById("hist-submit-btn").innerText = "➕ Add History Record";
+  document.getElementById("hist-cancel-btn").classList.add("hidden");
+};
+
+function saveHistoryToStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(historyStore));
+}
+
+window.exportHistoryData = function() {
+  const jsonString = JSON.stringify(historyStore, null, 2);
+  navigator.clipboard.writeText(jsonString).then(() => {
+    alert("History data JSON copied to clipboard! You can back this up anytime.");
+  });
+};
+
+// ------------------------------------------------------------------
+// AUTHENTICATION & CALCULATOR LOGIC
+// ------------------------------------------------------------------
 
 function renderMilestones() {
   if (!elements.milestonesContainer) return;
@@ -200,6 +286,7 @@ function showDashboard() {
   elements.adminWelcome.innerText = `Logged in securely as: ${activeSessionUser.username}`;
   toggleInterfaceView("dashboard");
   renderMilestones();
+  renderActiveRoomTable();
   handleLayoutSwitch();
 }
 
@@ -220,43 +307,7 @@ elements.loginForm.addEventListener("submit", function(e) {
   }
 });
 
-window.showHistory = function(categoryKey) {
-  const targetCategory = HISTORICAL_DATA_STORE[categoryKey];
-  if (!targetCategory) return;
-  elements.dynamicDisplay.innerHTML = "";
-
-  const layoutContainer = document.createElement("div");
-  layoutContainer.className = "history-card";
-  let tableRowsHtml = "";
-  
-  targetCategory.records.forEach(row => {
-    let cellStyle = (row.winner.includes("Prateek") || row.winner.includes("Dipendra")) ? 'style="color: var(--gold); font-weight: 600;"' : '';
-    tableRowsHtml += `
-      <tr>
-        <td style="width: 30%; font-weight: 500; color: var(--accent); padding: 0.75rem 0.5rem; border-bottom: 1px solid var(--border-color);">${escapeHtml(row.season)}</td>
-        <td ${cellStyle} style="padding: 0.75rem 0.5rem; border-bottom: 1px solid var(--border-color);">${escapeHtml(row.winner)}</td>
-      </tr>
-    `;
-  });
-
-  layoutContainer.innerHTML = `
-    <h3>${targetCategory.title}</h3>
-    <p class="subtitle" style="margin-bottom: 1.5rem;">${targetCategory.description}</p>
-    <div class="table-responsive">
-      <table style="width: 100%; border-collapse: collapse; text-align: left;">
-        <thead>
-          <tr style="border-bottom: 2px solid var(--border-color);">
-            <th style="padding: 0.75rem 0.5rem; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">${targetCategory.headers[0]}</th>
-            <th style="padding: 0.75rem 0.5rem; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase;">${targetCategory.headers[1]}</th>
-          </tr>
-        </thead>
-        <tbody>${tableRowsHtml}</tbody>
-      </table>
-    </div>
-  `;
-  elements.dynamicDisplay.appendChild(layoutContainer);
-};
-
+// Calculator Calculations
 window.switchRateCharge = function(rate) {
   currentTaxRate = rate;
   if (elements.calcCustomRate) elements.calcCustomRate.value = "";
@@ -406,6 +457,7 @@ elements.logoutButtons.forEach(button => {
 });
 
 function escapeHtml(str) {
+  if (!str) return "";
   return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
